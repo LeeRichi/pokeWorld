@@ -52,6 +52,7 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
 						{/* <p>searach bar Palbo</p> */}
           </div>
 					<div className="flex items-center justify-end gap-3 relative">
+						{/* cosider the heart and amount of likes */}
 						{/* <button><Heart isFilled={false} /></button> */}
             {user ? (
 							<div className="relative flex items-center space-x-2">

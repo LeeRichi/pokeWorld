@@ -77,20 +77,18 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		setSortBy(sortBy);
 	};
 
-	const handleSearch = useCallback(
-		debounce((term: string) => {
-			setSearchTerm(term);
-			if (term) {
-				const filteredSuggestions = pokeDetails.filter(pokemon =>
-					pokemon.name.toLowerCase().includes(term.toLowerCase())
-				);
-				setSuggestions(filteredSuggestions);
-			} else {
-				setSuggestions([]);
-			}
-		}, 300),
-		[pokeDetails]
-	);
+	const handleSearch = (term: string) =>
+	{
+		setSearchTerm(term);
+		if (term) {
+			const filteredSuggestions = pokeDetails.filter(pokemon =>
+				pokemon.name.toLowerCase().includes(term.toLowerCase())
+			);
+			setSuggestions(filteredSuggestions);
+		} else {
+			setSuggestions([]);
+		}
+	};
 
 	useEffect(() => {
 		const fetchPokemons = async () => {
@@ -114,7 +112,6 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		setLoadingMore(true); // Set loading state for more Pokémon
 		try {
 			const response = await fetch(`${apiUrl}/api/pokemons_with_likes?offset=${32}&limit=${1025}`);
-			// const response = await fetch('https://pokeapi.co/api/v2/pokemon?offset=32&limit=1025');
 			const data = await response.json();
 			if (!Array.isArray(data)) {
 				console.error("Expected data to be an array, but got:", data);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import { useRouter } from 'next/router';
@@ -7,49 +7,53 @@ const UserSearch = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
+	const inputRef = useRef<HTMLInputElement>(null);
 
-  // Handle the search input change
+	const [users, setUsers] = useState([])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+		setSearchTerm(e.target.value);
   };
 
-  // Toggle search bar visibility
   const toggleSearchBar = () => {
     setShowSearch(!showSearch);
-    setSearchTerm(''); // Clear the search term when toggling
+		setSearchTerm('');
   };
 
-  // Handle form submission
+  // Focus the input element when showSearch becomes true
+  useEffect(() => {
+    if (showSearch && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showSearch]);
+
   const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Retrieve the token from local storage
-		const token = localStorage.getItem('token');
-
-		console.log(token)
+    const token = localStorage.getItem('token');
+    console.log(token);
 
     try {
-      const response = await fetch(`http://localhost:3006/api/users`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-			});
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
 
-			const users = await response.json();
+      const users = await response.json();
+			setUsers(users);
 
-			console.log(users)
-      // Check if any user matches the search term (case insensitive)
       const foundUser = users.find((user: { username: string }) =>
         user.username.toLowerCase() === searchTerm.toLowerCase()
-			);
+      );
 
-			console.log(foundUser)
+      console.log(foundUser);
 
       if (foundUser) {
         // Assuming the user link is based on their username
@@ -59,7 +63,7 @@ const UserSearch = () => {
       }
 
     } catch (error) {
-      alert(error.message);
+			alert((error as Error).message);
     }
   };
 
@@ -72,6 +76,7 @@ const UserSearch = () => {
             placeholder="Search for a user..."
             value={searchTerm}
             onChange={handleInputChange}
+            ref={inputRef}
             className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
           />
         </form>
@@ -82,10 +87,14 @@ const UserSearch = () => {
         {showSearch ? <MdCancel /> : <CiSearch />}
       </button>
 
-      {/* Render search results (mockup) */}
       {showSearch && searchTerm && (
-        <div className="search-results mt-4">
-          {/* You could map through search results here */}
+      	<div className="search-results mt-4">
+          {users.map((user) => (
+            <div key={user.user_id} className="user-item p-2 border-b border-gray-300">
+              <p><strong>Username:</strong> {user.username}</p>
+              <p><strong>ID:</strong> {user.user_id}</p>
+            </div>
+          ))}
         </div>
       )}
     </div>

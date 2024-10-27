@@ -1,7 +1,8 @@
 import { PokeDetail } from '@/types/type_Pokemon';
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import debounce from 'lodash/debounce';
 
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -11,15 +12,23 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, setSearchTerm }) =>
 {
-	const [searchTerm, setLocalSearchTerm] = useState('');
+	const [localSearchTerm, setLocalSearchTerm] = useState('');
+
 
 	const router = useRouter();
 
+	const debouncedSearch = useCallback(
+    debounce((term: string) => {
+      setSearchTerm(term);
+      onSearch(term);
+    }, 300),
+    [setSearchTerm, onSearch]
+  );
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-		setSearchTerm(value);
-		setLocalSearchTerm(value);
-    onSearch(value);
+    setLocalSearchTerm(value);
+    debouncedSearch(value);
   };
 
   const handleSuggestionClick = (id: string) => {
@@ -29,11 +38,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, setSearchT
 	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) =>
 	{
 		if (e.key === 'Enter') {
-      router.push(`/pokemon/${searchTerm}`);
+      router.push(`/pokemon/${localSearchTerm}`);
 		}
 		if (e.key === 'Escape')
 		{
 			onSearch('');
+			setLocalSearchTerm('');
 		}
 	}
 
@@ -49,7 +59,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, setSearchT
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}
 				onBlur={handleBlur}
-				className="border border-gray-300 rounded-md shadow-sm p-2 h-12 w-full md:w-96 lg:w-12/12 focus:border-blue-500 focus:ring focus:ring-blue-200" // Adjusted width
+				className="border border-gray-300 rounded-md shadow-sm p-2 h-12 w-full md:w-96 lg:w-12/12 focus:border-blue-500 focus:ring focus:ring-blue-200"
       />
 			{suggestions.length > 0 && (
   			<ul className="absolute z-10 bg-white border border-gray-300 mt-1 w-full max-h-60 overflow-auto rounded-md">
