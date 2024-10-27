@@ -114,14 +114,14 @@ const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: b
 							e.preventDefault();
 							alert("This is not your Pokémon!!!");
 						}}
-						className="absolute top-6 right-5 focus:outline-none w-5"
+						className="absolute top-6 right-5 focus:outline-none w-5 hover:text-blue-500 hover:scale-110 transition duration-200 ease-in-out"
 					>
 						<Heart isFilled={isFilled} />
 					</button>
 					: <button
 						onClick={toggleFavorite}
-						className="absolute top-6 right-5 focus:outline-none w-5"
-					>
+						className="absolute top-6 right-5 focus:outline-none w-5 hover:text-blue-500 hover:scale-110 transition duration-200 ease-in-out"
+						>
 						<Heart isFilled={isFilled} />
 					</button>
 				}
