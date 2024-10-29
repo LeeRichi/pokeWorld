@@ -228,15 +228,15 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const { id } = req.params;
+	const { id } = req.params;
 
   try {
-		const { userId } = authenticateUser(req);
+		// const { userId } = authenticateUser(req);
 
-		if (!userId)
-		{
-      return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
-		}
+		// if (!userId)
+		// {
+    //   return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
+		// }
 
     const result = await pool.query(`
       SELECT u.*,
@@ -461,4 +461,32 @@ const changePassword = async (req, res) => {
 	}
 };
 
-module.exports = { getUserById, getAllUsers, getUserFavorites, addFavoritePokemon, removeFavoritePokemon, editUserInfo, changePassword };
+
+const searchUser = async(req, res) => {
+	const { username } = req.query;
+
+	console.log("SearchUser Endpoint Hit"); // Add this to log endpoint usage
+
+
+	console.log(username)
+
+  if (!username) {
+    return res.status(400).json({ error: 'Username query parameter is required' });
+  }
+
+  try {
+    const users = await pool.query(
+      'SELECT user_id, username FROM users WHERE username ILIKE $1 LIMIT 10',
+      [`%${username}%`]
+		);
+
+		console.log(users.rows)
+    res.json(users.rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+};
+
+
+module.exports = { getUserById, getAllUsers, getUserFavorites, addFavoritePokemon, removeFavoritePokemon, editUserInfo, changePassword, searchUser };

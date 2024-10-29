@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import { useRouter } from 'next/router';
+import debounce from 'lodash/debounce';
+import { User } from '@/types/type_User';
 
 const UserSearch = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -11,8 +13,52 @@ const UserSearch = () => {
 
 	const [users, setUsers] = useState([])
 
+	const [suggestions, setSuggestions] = useState([])
+
+	const fetchUserSuggestions = useCallback(
+		debounce(async (term: string) => {
+      if (term.length < 2) {
+        setSuggestions([]);
+        return;
+      }
+      const token = localStorage.getItem('token');
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users-search/search?username=${term}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const users = await response.json();
+          setSuggestions(users);
+        } else {
+          console.error('Failed to fetch user suggestions');
+        }
+      } catch (error) {
+        console.error('Error fetching user suggestions:', error);
+      }
+    }, 500),
+    []
+	);
+
+	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) =>
+	{
+		if (e.key === 'Enter') {
+      // router.push(`/pokemon/${localSearchTerm}`);
+		}
+		if (e.key === 'Escape')
+		{
+			setSuggestions([]);
+			// setLocalSearchTerm('');
+		}
+	}
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSearchTerm(e.target.value);
+		setSearchTerm(e.target.value)
+		fetchUserSuggestions(e.target.value)
   };
 
   const toggleSearchBar = () => {
@@ -56,8 +102,7 @@ const UserSearch = () => {
       console.log(foundUser);
 
       if (foundUser) {
-        // Assuming the user link is based on their username
-        router.push(`/user/${foundUser.user_id}`); // Change this based on your routing setup
+        router.push(`/user/${foundUser.user_id}`);
       } else {
         alert('User not found');
       }
@@ -65,20 +110,44 @@ const UserSearch = () => {
     } catch (error) {
 			alert((error as Error).message);
     }
+	};
+
+	const handleSuggestionClick = (userId: number) => {
+    router.push(`/user/${userId}`);
+    toggleSearchBar();
   };
+
+	console.log(suggestions)
 
   return (
     <div className="user-search flex">
       {showSearch && (
-        <form onSubmit={handleSearchSubmit} className="search-bar flex items-center">
+				<form
+					onSubmit={handleSearchSubmit}
+					className="search-bar flex items-center">
           <input
             type="text"
             placeholder="Search for a user..."
             value={searchTerm}
             onChange={handleInputChange}
-            ref={inputRef}
+						ref={inputRef}
+						onKeyDown={handleKeyDown}
             className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-          />
+					/>
+					{suggestions.length > 0 && (
+            <ul className="absolute z-10 bg-white border border-gray-300 mt-28 w-6/12 max-h-60 overflow-auto rounded-md shadow-lg">
+							{suggestions.map((user: User) => (
+                <li
+                  key={user.user_id}
+                  onClick={() => handleSuggestionClick(user.user_id)}
+                  className="p-2 cursor-pointer hover:bg-blue-500 hover:text-white"
+								>
+									{user.image}
+                  {user.username}
+                </li>
+              ))}
+            </ul>
+          )}
         </form>
       )}
       <button
@@ -87,16 +156,17 @@ const UserSearch = () => {
         {showSearch ? <MdCancel /> : <CiSearch />}
       </button>
 
-      {showSearch && searchTerm && (
+      {/* {showSearch && searchTerm && (
       	<div className="search-results mt-4">
-          {users.map((user) => (
+					{users.map((user) => (
+
             <div key={user.user_id} className="user-item p-2 border-b border-gray-300">
               <p><strong>Username:</strong> {user.username}</p>
               <p><strong>ID:</strong> {user.user_id}</p>
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

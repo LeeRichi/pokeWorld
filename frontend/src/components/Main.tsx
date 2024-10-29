@@ -23,6 +23,7 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 	const router = useRouter();
 	//basic data
 	const [pokeDetails, setPokeDetails] = useState<PokeDetail[]>([]);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [loadingMore, setLoadingMore] = useState<boolean>(false);
 
@@ -32,7 +33,7 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 
 	//pagination
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 32;
+	const itemsPerPage = 20;
 
 	// Search state
 	const [searchTerm, setSearchTerm] = useState('');
@@ -57,7 +58,7 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users/${id}`, {
 				headers: {
-          Authorization: `Bearer ${token}`, // Include token in the request headers
+          Authorization: `Bearer ${token}`,
         },
 			});
 			const data = await response.json();
@@ -91,46 +92,28 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 	};
 
 	useEffect(() => {
-		const fetchPokemons = async () => {
+		const fetchInitialPokemons = async () => {
 			try {
-				const response = await fetch(`${apiUrl}/api/pokemons_with_likes`);
-				const data = await response.json();
-				const details = await Promise.all(data);
-				setPokeDetails(details);
+				// Fetch the first batch only (20 items)
+				const initialData = await fetch(`${apiUrl}/api/pokemons_with_likes?offset=0&limit=20`).then((res) => res.json());
+				setPokeDetails(initialData);
+				setLoading(false);
+
+				// Fetch the rest in the background
+				const remainingData = await fetch(`${apiUrl}/api/pokemons_with_likes?offset=20&limit=1025`).then((res) => res.json());
+				console.log(remainingData)
+				const combinedData = [...initialData, ...remainingData];
+
+				setPokeDetails(combinedData);
 			} catch (error) {
 				console.error("Error fetching Pokémon data:", error);
 			} finally {
-				setLoading(false);
+				setLoadingMore(false);
 			}
 		};
-		fetchPokemons();
+
+		fetchInitialPokemons();
 	}, []);
-
-	//fetch the rest //big amount
-	useEffect(() => {
-	const fetchRemainingPokemons = async () => {
-		setLoadingMore(true); // Set loading state for more Pokémon
-		try {
-			const response = await fetch(`${apiUrl}/api/pokemons_with_likes?offset=${32}&limit=${1025}`);
-			const data = await response.json();
-			if (!Array.isArray(data)) {
-				console.error("Expected data to be an array, but got:", data);
-				return;
-			}
-			setPokeDetails(prevDetails => {
-				const existingNames = new Set(prevDetails.map(p => p.name)); // Set of existing Pokémon names
-				const newPokemons = data.filter((p: PokeDetail) => !existingNames.has(p.name)); // Filter out duplicates
-
-				return [...prevDetails, ...newPokemons]; // Merge without duplicates
-			});
-		} catch (error) {
-			console.error("Error fetching more Pokémon data:", error);
-		} finally {
-			setLoadingMore(false);
-		}
-	};
-    fetchRemainingPokemons();
-	}, [loading]);
 
 	const handleLikesChange = (pokemonId: string, newLikes: number) => {
     setPokeDetails((prevDetails) =>
@@ -146,6 +129,8 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 			pokemon.types.some((type) => type.type.name === selectedType)
 		)
 		: pokeDetails;
+
+	// console.log(filteredPokemons)
 
 	const sortedPokemons = filteredPokemons.sort((a, b) =>
 	{

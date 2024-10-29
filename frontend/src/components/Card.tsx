@@ -11,6 +11,8 @@ import router from 'next/router';
 
 const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: boolean, user: User, onLikesChange?: (pokemonId: string, newLikes: number) => void }> = ({ pokemon, userPageMode = false, isFavorite, user, onLikesChange}) => {
 	const [isFilled, setIsFilled] = useState(isFavorite);
+
+	// console.log(pokemon)
 	let id = null;
 	if (user)
 	{
@@ -106,7 +108,7 @@ const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: b
 
   return (
     <Link href={`/pokemon/${pokemon.id}`} passHref>
-			<div key={pokemon.name} className={`border rounded-lg shadow-lg p-4 bg-white relative ${userPageMode ? 'bg-white' : 'bg-white'} `}>
+			<div key={pokemon.name} className={`border rounded-lg shadow-lg p-4 bg-white relative ${userPageMode ? 'bg-white' : 'bg-white'} hover:scale-105 transition duration-200 ease-in-out`}>
 				{pokemon.likes === 0 ? null : <span className='absolute top-5 right-11'>{pokemon.likes}</span>}
 				{!isUserOwner ?
 					<button

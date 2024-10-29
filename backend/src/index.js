@@ -12,85 +12,41 @@ const { register } = require('./auth/register');
 const { login } = require('./auth/login');
 const { authenticateToken } = require('./auth/authMiddleware');
 
-const { getUserById, getAllUsers, getUserFavorites, addFavoritePokemon, removeFavoritePokemon, editUserInfo, changePassword } = require('./user/user');
+const { getUserById, getAllUsers, getUserFavorites, addFavoritePokemon, removeFavoritePokemon, editUserInfo, changePassword, searchUser } = require('./user/user');
 
 app.use(express.json())
 
-// Example route to fetch Pokémon data from an external API
 app.get('/api/pokemons', async (req, res) => {
   try {
-		const offset = req.query.offset || 0;
-		const limit = req.query.limit || 32;
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 20;
 
-    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
-    // Sending the fetched data back to the frontend
-		res.json(response.data);
+    // Fetch data from the PokeAPI
+		const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
+		// res.json(response.data.results);
+
+		const pokemonDetailsPromises = response.data.results.map(async (pokemon) =>
+		{
+			const pokemonResponse = await axios.get(pokemon.url);
+			return pokemonResponse.data;
+		});
+		const detailedPokemons = await Promise.all(pokemonDetailsPromises);
+
+		res.json({ likes: 0, detailedPokemons })
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch Pokémon data' });
+    console.error("Error fetching Pokémon data:", error);
+    res.status(500).json({ error: 'Failed to fetch Pokémon data', details: error.message });
   }
 });
-
-// app.get('/api/pokemon-likes', async (req, res) => {
-//   try {
-//     const result = await pool.query(`
-//       SELECT pokemon_id, COUNT(user_id) AS likes
-//       FROM favorites
-//       GROUP BY pokemon_id
-//     `);
-//     res.json(result.rows); // Return the Pokémon likes count
-//   } catch (error) {
-//     console.error('Error fetching Pokémon likes:', error);
-//     res.status(500).json({ error: 'Failed to fetch Pokémon likes count' });
-//   }
-// });
-
-// Your existing backend API route to fetch Pokémon with likes
-// app.get('/api/pokemons_with_likes', async (req, res) => {
-//   try {
-//     // Fetch Pokémon data
-// 		// const pokemons = await pool.query('SELECT * FROM pokemons');
-// 		const offset = req.query.offset || 0;
-// 		const limit = req.query.limit || 32;
-
-// 		const pokemons = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
-// 		// console.log(pokemons.data.results)
-
-// 		const pokemonsDetails = pokemons.data.results.map(async (pokemon) => {
-// 			const detailResponse = await fetch(pokemon.url);
-// 			return detailResponse.json();
-// 		});
-// 		// const pokemonsDetail = fetch(pokemons.url);
-
-// 		// console.log(pokemonsDetails)
-
-//     // Fetch likes data
-// 		const likes = await pool.query('SELECT * FROM favorites');
-
-// 		console.log(likes.rows)
-
-//     // Combine Pokémon with likes
-//     const combinedData = pokemonsDetails?.map(pokemon => {
-//       const like = likes.rows.find(l => l.pokemon_id === pokemon.id);
-//       return { ...pokemon, likes: like ? like.likes : 0 };
-// 		});
-
-// 		console.log(combinedData)
-
-//     res.json(combinedData);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// });
 
 app.get('/api/pokemons_with_likes', async (req, res) => {
   try {
     const offset = req.query.offset || 0;
-    const limit = req.query.limit || 32;
+    const limit = req.query.limit || 20;
 
     // Fetch Pokémon data
     const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
-    const pokemons = pokemonsResponse.data.results;
+		const pokemons = pokemonsResponse.data.results;
 
     // Fetch likes data
     const likesResult = await pool.query(`
@@ -104,12 +60,36 @@ app.get('/api/pokemons_with_likes', async (req, res) => {
 
     // Fetch detailed Pokémon data and combine with likes
     const combinedData = await Promise.all(pokemons.map(async (pokemon) => {
-      const detailResponse = await axios.get(pokemon.url); // Fetch more details
-      const likes = likesMap.get(detailResponse.data.id) || 0; // Get likes count or default to 0
-      return { ...detailResponse.data, likes }; // Combine details with likes
-    }));
+			const detailResponse = await axios.get(pokemon.url);
+			const { id, name, sprites, height, weight, types } = detailResponse.data; // Destructure only required fields
+			const likes = likesMap.get(id) || 0;
 
-    res.json(combinedData);
+			return {
+				id,
+				name,
+				likes,
+				sprites: {
+					front_default: sprites.front_default,
+					other: {
+						home: {
+							front_default: sprites.other?.home?.front_default
+						},
+						showdown: {
+							front_default: sprites.other?.showdown?.front_default,
+							back_default: sprites.other?.showdown?.back_default
+						}
+					}
+				},
+				height,
+				weight,
+				types
+			};
+		}));
+
+		console.log(combinedData)
+
+		res.json(combinedData)
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -129,6 +109,8 @@ app.post('/api/users/favorites', addFavoritePokemon);
 app.delete('/api/users/favorites', removeFavoritePokemon);
 app.put('/api/users/:id', editUserInfo);
 app.post('/api/users/change_password', changePassword);
+
+app.get('/api/users-search/search', searchUser);
 
 // Check database connection
 pool.connect()
