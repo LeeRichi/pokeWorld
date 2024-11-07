@@ -18,7 +18,7 @@ interface MainProps {
 	setUser: (user: User | null) => void;
 }
 
-const Main: React.FC<MainProps> = ({user, setUser}) =>
+const Main: React.FC<MainProps> = ({ user, setUser }) =>
 {
 	const router = useRouter();
 	//basic data
@@ -31,20 +31,25 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 	const [selectedType, setSelectedType] = useState('');
 	const [sortBy, setSortBy] = useState('id');
 
+	const [sort, setSort] = useState('id');
+	const [order, setOrder] = useState('asc');
+	const [quantity, setQuantity] = useState(0);
+
 	//pagination
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 20;
+	const [restLoading, setRestLoading] = useState(true);
 
 	// Search state
 	const [searchTerm, setSearchTerm] = useState('');
 	const [suggestions, setSuggestions] = useState<PokeDetail[]>([]);
 
-	useEffect(() => {
+	useEffect(() =>
+	{
 		// const token = localStorage.getItem('token');
 		const user_from_ls = localStorage.getItem('user');
-			// setUserInLocalStorage(user_from_ls)
-		if (user_from_ls)
-		{
+		// setUserInLocalStorage(user_from_ls)
+		if (user_from_ls) {
 			const parsedUser = JSON.parse(user_from_ls);
 			fetchUserDetails(parsedUser.user_id);
 			console.log(parsedUser)
@@ -58,8 +63,8 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users/${id}`, {
 				headers: {
-          Authorization: `Bearer ${token}`,
-        },
+					Authorization: `Bearer ${token}`,
+				},
 			});
 			const data = await response.json();
 			setUser(data);
@@ -68,13 +73,15 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		}
 	};
 
-	const handleTypeChange = (type: string) => {
+	const handleTypeChange = (type: string) =>
+	{
 		setSelectedType(type);
 		setCurrentPage(1);
 	};
 
-	const handleSortChange = (sortBy: string) => {
-		setCurrentPage(1);
+	const handleSortChange = (sortBy: string) =>
+	{
+		// setCurrentPage(1);
 		setSortBy(sortBy);
 	};
 
@@ -91,38 +98,50 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		}
 	};
 
-	useEffect(() => {
-		const fetchInitialPokemons = async () => {
-			try {
-				// Fetch the first batch only (20 items)
-				const initialData = await fetch(`${apiUrl}/api/pokemons_with_likes?offset=0&limit=20`).then((res) => res.json());
-				setPokeDetails(initialData);
-				setLoading(false);
+	const fetchPokemons = async (page: number, offset: number, limit: number, sort: string, order: string) =>
+	{
+		try {
+			console.log('Fetching Pokemons with the following parameters:');
+			console.log(`Page: ${page}`);
+			console.log(`Offset: ${offset}`);
+			console.log(`Limit: ${limit}`);
+			console.log(`Sort: ${sort}`);
+			console.log(`Order: ${order}`);
 
-				// Fetch the rest in the background
-				const remainingData = await fetch(`${apiUrl}/api/pokemons_with_likes?offset=20&limit=1025`).then((res) => res.json());
-				console.log(remainingData)
-				const combinedData = [...initialData, ...remainingData];
+			const response = await fetch(`${apiUrl}/api/pokemons?page=${page}&offset=${offset}&limit=${limit}&sort=${sort}&order=${order}`);
+			// console.log(first)
+			const data = await response.json();
+			console.log(data)
+			setPokeDetails(data);
+			// setLoading(false);
+			const quantityRes = await fetch(`${apiUrl}/api/pokemonsquantity`);
+			const quantityData = await quantityRes.json();
+			setQuantity(quantityData)
+			setRestLoading(false);
+		} catch (error) {
+			console.error("Error fetching Pokémon data:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-				setPokeDetails(combinedData);
-			} catch (error) {
-				console.error("Error fetching Pokémon data:", error);
-			} finally {
-				setLoadingMore(false);
-			}
-		};
+	useEffect(() =>
+	{
+		const offset = (currentPage - 1) * itemsPerPage;
 
-		fetchInitialPokemons();
-	}, []);
+		fetchPokemons(currentPage, offset, itemsPerPage, sort, order);
+	}, [currentPage, itemsPerPage, sort, order]);
 
-	const handleLikesChange = (pokemonId: string, newLikes: number) => {
-    setPokeDetails((prevDetails) =>
-      prevDetails.map((pokemon) =>
-        pokemon.id === pokemonId ? { ...pokemon, likes: newLikes } : pokemon
-      )
-    );
-  };
+	const handleLikesChange = (pokemonId: string, newLikes: number) =>
+	{
+		setPokeDetails((prevDetails) =>
+			prevDetails.map((pokemon) =>
+				pokemon.id === pokemonId ? { ...pokemon, likes: newLikes } : pokemon
+			)
+		);
+	};
 
+	console.log(pokeDetails)
 	//This part translate the data array first into filtered version, and then a sorted array
 	const filteredPokemons = selectedType
 		? pokeDetails.filter((pokemon) =>
@@ -130,36 +149,58 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 		)
 		: pokeDetails;
 
-	// console.log(filteredPokemons)
+	// const sortedPokemons = filteredPokemons.sort((a, b) =>
+	// {
+	// 	if (sortBy === 'id') {
+	// 		return parseInt(a.id) - parseInt(b.id);
+	// 	} else if (sortBy === 'reverse-id')
+	// 	{
+	// 		return parseInt(b.id) - parseInt(a.id);
+	// 	} else if (sortBy === 'name')
+	// 	{
+	// 		return a.name.localeCompare(b.name);
+	// 	} else if (sortBy === 'reverse-name')
+	// 	{
+	// 		return b.name.localeCompare(a.name);
+	// 	} else if (sortBy === 'likes')
+	// 	{
+	// 		return a.likes - b.likes
+	// 	} else if (sortBy === 'reverse-likes')
+	// 	{
+	// 		return b.likes - a.likes
+	// 	}
+	// 		return parseInt(a.id) - parseInt(b.id);
+	// });
 
-	const sortedPokemons = filteredPokemons.sort((a, b) =>
-	{
+	useEffect(() => {
 		if (sortBy === 'id') {
-			return parseInt(a.id) - parseInt(b.id);
-		} else if (sortBy === 'reverse-id')
-		{
-			return parseInt(b.id) - parseInt(a.id);
-		} else if (sortBy === 'name')
-		{
-			return a.name.localeCompare(b.name);
-		} else if (sortBy === 'reverse-name')
-		{
-			return b.name.localeCompare(a.name);
-		} else if (sortBy === 'likes')
-		{
-			return a.likes - b.likes
-		} else if (sortBy === 'reverse-likes')
-		{
-			return b.likes - a.likes
+			setSort('id');
+			setOrder('asc');
+		} else if (sortBy === 'reverse-id') {
+			setSort('id');
+			setOrder('desc');
+		} else if (sortBy === 'name') {
+			setSort('name');
+			setOrder('asc');
+		} else if (sortBy === 'reverse-name') {
+			setSort('name');
+			setOrder('desc');
+		} else if (sortBy === 'likes') {
+			setSort('likes');
+			setOrder('asc');
+		} else if (sortBy === 'reverse-likes') {
+			setSort('likes');
+			setOrder('desc');
 		}
-			return parseInt(a.id) - parseInt(b.id);
-	});
+	}, [sortBy]);
 
-	//page calculations
-	const indexOfLastPokemon = currentPage * itemsPerPage;
-	const indexOfFirstPokemon = indexOfLastPokemon - itemsPerPage;
-	const currentPokemons = sortedPokemons.slice(indexOfFirstPokemon, indexOfLastPokemon);
-	const totalPages = Math.ceil(sortedPokemons.length / itemsPerPage);
+	const totalPages = Math.ceil((quantity ?? 0) / itemsPerPage);
+
+	console.log(sortBy)
+
+	console.log(filteredPokemons)
+
+	console.log(Array.isArray(filteredPokemons)); // should log `true` if it's an array
 
 	if (loading) {
 		return (
@@ -187,11 +228,11 @@ const Main: React.FC<MainProps> = ({user, setUser}) =>
 				onSortChange={handleSortChange}
 			/>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-				{currentPokemons.map((pokemon) => (
+				{filteredPokemons.map((pokemon) => (
 					<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(pokemon.id)} user={user} onLikesChange={handleLikesChange}/>
 				))}
 			</div>
-			<PaginationBtn totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+			<PaginationBtn totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} restLoading={restLoading} />
 		</div>
   );
 };

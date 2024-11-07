@@ -24,7 +24,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange
   const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const sortValue = e.target.value;
     setSortOption(sortValue);
-	onSortChange(sortValue);
+		onSortChange(sortValue);
+		console.log(sortValue)
   };
 
   return (
