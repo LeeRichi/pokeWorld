@@ -101,19 +101,9 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	const fetchPokemons = async (page: number, offset: number, limit: number, sort: string, order: string) =>
 	{
 		try {
-			console.log('Fetching Pokemons with the following parameters:');
-			console.log(`Page: ${page}`);
-			console.log(`Offset: ${offset}`);
-			console.log(`Limit: ${limit}`);
-			console.log(`Sort: ${sort}`);
-			console.log(`Order: ${order}`);
-
 			const response = await fetch(`${apiUrl}/api/pokemons?page=${page}&offset=${offset}&limit=${limit}&sort=${sort}&order=${order}`);
-			// console.log(first)
 			const data = await response.json();
-			console.log(data)
 			setPokeDetails(data);
-			// setLoading(false);
 			const quantityRes = await fetch(`${apiUrl}/api/pokemonsquantity`);
 			const quantityData = await quantityRes.json();
 			setQuantity(quantityData)
@@ -149,29 +139,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 		)
 		: pokeDetails;
 
-	// const sortedPokemons = filteredPokemons.sort((a, b) =>
-	// {
-	// 	if (sortBy === 'id') {
-	// 		return parseInt(a.id) - parseInt(b.id);
-	// 	} else if (sortBy === 'reverse-id')
-	// 	{
-	// 		return parseInt(b.id) - parseInt(a.id);
-	// 	} else if (sortBy === 'name')
-	// 	{
-	// 		return a.name.localeCompare(b.name);
-	// 	} else if (sortBy === 'reverse-name')
-	// 	{
-	// 		return b.name.localeCompare(a.name);
-	// 	} else if (sortBy === 'likes')
-	// 	{
-	// 		return a.likes - b.likes
-	// 	} else if (sortBy === 'reverse-likes')
-	// 	{
-	// 		return b.likes - a.likes
-	// 	}
-	// 		return parseInt(a.id) - parseInt(b.id);
-	// });
-
 	useEffect(() => {
 		if (sortBy === 'id') {
 			setSort('id');
@@ -196,12 +163,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	const totalPages = Math.ceil((quantity ?? 0) / itemsPerPage);
 
-	console.log(sortBy)
-
-	console.log(filteredPokemons)
-
-	console.log(Array.isArray(filteredPokemons)); // should log `true` if it's an array
-
 	if (loading) {
 		return (
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 mt-60">
@@ -213,7 +174,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	}
 
   if (router.pathname.includes('/pokemon/')) {
-	  return null; // Don't render anything if we're on a pokemon detail page
+	  return null;
   }
 
   return (
