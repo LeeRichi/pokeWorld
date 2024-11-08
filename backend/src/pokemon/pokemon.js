@@ -66,9 +66,6 @@ const getPokemons = async(req, res) => {
 			};
 		}));
 
-		console.log(sortField)
-		console.log("sortOrder: " + sortOrder)
-
 		combinedData.sort((a, b) => {
       if (sortField === 'likes') {
         return sortOrder === 'asc' ? a.likes - b.likes : b.likes - a.likes;

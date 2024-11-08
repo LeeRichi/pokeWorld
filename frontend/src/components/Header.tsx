@@ -5,7 +5,7 @@ import defaultAvatar from '../assests/default_avatar.jpg'
 import { User } from '@/types/type_User';
 import Dropdown from './Dropdown';
 import UserSearch from './UserSearch';
-// import Heart from './Heart';
+import { signOut } from "next-auth/react";
 
 interface HeaderProps {
   user: User | null;
@@ -24,8 +24,11 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setDropdownVisible(false);
-    window.location.href = '/login';
+		setDropdownVisible(false);
+		//temp
+		console.log('called')
+		signOut({ callbackUrl: '/login' }); // Redirects to login after signing out
+    window.location.href = '/';
 	};
 
   return (

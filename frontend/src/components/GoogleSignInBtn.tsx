@@ -37,6 +37,7 @@ export function GoogleSignInBtn({ setUser }: GoogleSignInBtnProps){
             body: JSON.stringify(userInfo),
           });
 
+					console.log(res.ok)
           if (res.ok) {
             const data = await res.json();
             localStorage.setItem('user', JSON.stringify(data.user));

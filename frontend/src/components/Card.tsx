@@ -62,7 +62,8 @@ const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: b
 		const method = isFilled ? 'DELETE' : 'POST';
 
 		try {
-			const token = localStorage.getItem('token');
+			const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+
 			const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users/favorites`, {
 				method: method,
 				headers: {

@@ -81,7 +81,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	const handleSortChange = (sortBy: string) =>
 	{
-		// setCurrentPage(1);
 		setSortBy(sortBy);
 	};
 
@@ -131,7 +130,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 		);
 	};
 
-	console.log(pokeDetails)
 	//This part translate the data array first into filtered version, and then a sorted array
 	const filteredPokemons = selectedType
 		? pokeDetails.filter((pokemon) =>

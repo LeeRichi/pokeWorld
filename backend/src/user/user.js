@@ -4,11 +4,15 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // Middleware to authenticate user based on token
-const authenticateUser = (req) => {
-  const token = req.headers.authorization?.split(' ')[1];
+const authenticateUser = (req) =>
+{
+	const token = req.headers.authorization?.split(' ')[1];
+
   if (!token) {
     throw new Error('No token provided');
-  }
+	}
+	//temp
+	console.log(token)
   return jwt.verify(token, process.env.JWT_SECRET);
 };
 
@@ -51,15 +55,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
 	const { id } = req.params;
-
   try {
-		// const { userId } = authenticateUser(req);
-
-		// if (!userId)
-		// {
-    //   return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
-		// }
-
     const result = await pool.query(`
       SELECT u.*,
         ARRAY(SELECT pokemon_id FROM favorites f WHERE f.user_id = u.user_id) AS favorite_pokemon_ids
@@ -93,18 +89,11 @@ const getUserFavorites = async (req, res) => {
   const { id } = req.params;
 
   try {
-		const { userId } = authenticateUser(req); // Get userId from token
+		const { userId } = authenticateUser(req);
 		if (!userId)
 		{
       return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
 		}
-		console.log(parseInt(id))
-		console.log('hallo')
-
-    // Ensure that the user can only fetch their own favorites
-    // if (userId !== parseInt(id)) {
-    //   return res.status(403).json({ message: 'You are not authorized to access this user\'s favorites' });
-    // }
 
     const result = await pool.query(
       'SELECT pokemon_id FROM favorites WHERE user_id = $1',
@@ -136,7 +125,7 @@ const addFavoritePokemon = async (req, res) => {
   const { userId, pokemonId } = req.body;
 
   try {
-    const { userId: tokenUserId } = authenticateUser(req); // Get userId from token
+		const { userId: tokenUserId } = authenticateUser(req); // Get userId from token
 
     // Ensure that the user can only add favorites for themselves
     if (tokenUserId !== userId) {

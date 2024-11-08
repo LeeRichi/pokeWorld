@@ -26,8 +26,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
       if (isExpired) {
         localStorage.removeItem('token');
         setUser(null);
-        toast.error("Session expired. Please log in again.");
-				router.push('/login');
+				toast.error("Session expired. Please log in again.");
+				// setTimeout(() => {
+					router.push('/login');
+				// }, 2000);
       }
     }
 	};
