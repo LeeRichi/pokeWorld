@@ -9,10 +9,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import router from 'next/router';
 
-const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: boolean, user: User, onLikesChange?: (pokemonId: string, newLikes: number) => void }> = ({ pokemon, userPageMode = false, isFavorite, user, onLikesChange}) => {
+const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: boolean | undefined, user: User | null, onLikesChange?: (pokemonId: string, newLikes: number) => void }> = ({ pokemon, userPageMode = false, isFavorite, user, onLikesChange}) => {
 	const [isFilled, setIsFilled] = useState(isFavorite);
 
-	// console.log(pokemon)
 	let id = null;
 	if (user)
 	{
@@ -113,10 +112,11 @@ const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: b
 				{pokemon.likes === 0 ? null : <span className='absolute top-5 right-11'>{pokemon.likes}</span>}
 				{!isUserOwner ?
 					<button
-						onClick={(e) => {
-							e.preventDefault();
-							alert("This is not your Pokémon!!!");
-						}}
+						// onClick={(e) => {
+						// 	e.preventDefault();
+						// 	alert("This is not your Pokémon!!!");
+						// }}
+						onClick={toggleFavorite}
 						className="absolute top-6 right-5 focus:outline-none w-5 hover:text-blue-500 hover:scale-110 transition duration-200 ease-in-out"
 					>
 						<Heart isFilled={isFilled} />
