@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h2 id="routes">📍 API Endpoints</h2>
+​
+<h3 id="get-auth-detail">GET /api/pokemons_with_likes</h3>
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**RESPONSE**
+```json
+{
+  "name": "bulbasaur",
+  "weight": 20,
+	"height": 10,
+  "types": {},
+	"favorites": 3,
+	"...more objects"
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h3 id="post-auth-detail">POST /api/login</h3>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**REQUEST**
+```json
+{
+  "username": "rich",
+  "password": "1234"
+}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**RESPONSE**
+```json
+{
+  "token": "OwoMRHsaQwyAgVoc3OXmL1JhMVUYXGGBbCTK0GBgiYitwQwjf0gVoBmkbuyy0pSi",
+	"message": "log",
+	"user": "user{}",
+}
+```
 
-## Learn More
+<h3 id="post-auth-detail">POST /api/register</h3>
 
-To learn more about Next.js, take a look at the following resources:
+**REQUEST**
+```json
+{
+  "username": "rich",
+	"email": "rich@gmail.com",
+  "password": "1234"
+}
+```
+**RESPONSE**
+```json
+{
+  "token": "OwoMRHsaQwyAgVoc3OXmL1JhMVUYXGGBbCTK0GBgiYitwQwjf0gVoBmkbuyy0pSi",
+	"message": "Login succesful",
+	"user": "user{}",
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<h3 id="post-auth-detail">DELETE /api/users/favorites</h3>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**REQUEST**
+- **Headers**:
+  - `Authorization`: `Bearer <token>` _(Required)_
 
-## Deploy on Vercel
+- **Body** (JSON):
+```json
+{
+  "userId": "3",
+	"pokemonId": "3",
+}
+```
+**RESPONSE**
+```json
+{
+	"message": "message: 'Favorite Pokémon removed successfully'",
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<h3 id="post-auth-detail">PUT /api/users/:id/editUserInfo</h3>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**REQUEST**
+- **Headers**:
+  - `Authorization`: `Bearer <token>` _(Required)_
+
+- **Body** (JSON):
+```json
+{
+  "username": "cat",
+	"email": "cat@gmail.com",
+	"id": "1"
+}
+```
+**RESPONSE**
+```json
+{
+	"message": "message: 'Favorite Pokémon removed successfully'",
+}
+```
+
