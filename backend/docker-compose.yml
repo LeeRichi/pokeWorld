@@ -1,38 +1,7 @@
-# version: '3'
-# services:
-#   app:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     ports:
-#       - '3006:3006'
-#     depends_on:
-#       - db
-#     environment:
-#       - DB_HOST=db
-#       - DB_USER=your_db_user
-#       - DB_PASSWORD=your_db_password
-#       - DB_NAME=your_db_name
-#     volumes:
-#       - .:/usr/src/app
-#     command: npm start
+version: '3.8'
 
-#   db:
-#     image: postgres:14
-#     environment:
-#       POSTGRES_USER: your_db_user
-#       POSTGRES_PASSWORD: your_db_password
-#       POSTGRES_DB: your_db_name
-#     volumes:
-#       - ./second.sql:/docker-entrypoint-initdb.d/second.sql
-#     ports:
-#       - '5433:5432'
-
-#   adminer:
-#     image: adminer
-#     restart: always
-#     ports:
-#       - 8080:8080
+networks:
+  mynetwork:
 
 services:
   app:
@@ -52,6 +21,8 @@ services:
     volumes:
       - .:/usr/src/app
     command: npm run dev
+    networks:
+      - mynetwork
 
   db:
     image: postgres:14
@@ -60,13 +31,20 @@ services:
       POSTGRES_PASSWORD: yourpassword
       POSTGRES_DB: pokemon_db
     volumes:
-      - ./second.sql:/docker-entrypoint-initdb.d/second.sql
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - '5433:5432'
+    networks:
+      - mynetwork
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - '8080:8080'
+    networks:
+      - mynetwork
 
+volumes:
+  pgdata:

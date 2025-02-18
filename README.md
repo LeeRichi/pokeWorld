@@ -32,27 +32,32 @@ git clone https://github.com/yourusername/pokeWorld.git
 cd pokeWorld
 ```
 
-### 2. Set Up the Environment
+### 2. Set Up Backend Environment
 
+- First, we will start from setting up from back-end.
 - You will need to create a .env file to configure the database and backend environment variables.
 
 ```bash
+cd backend
 touch .env
 ```
 
 - Add the following content to the .env file:
 
 ```bash
-DB_HOST=db
 DB_USER=youruser
 DB_PASSWORD=yourpassword
+DB_HOST=localhost
+DB_PORT=5432
 DB_NAME=pokemon_db
 BACKEND_PORT=3006
 JWT_SECRET=your_jwt_secret
 ```
 
 ### 3. Build and Run the Docker Containers
-- The project uses Docker Compose to build and run the application. Run the following command to build and start all the containers:
+- The project uses Docker Compose to build and run the application.
+First step is to make sure our docker app is running.
+Run the following command to build and start all the containers:
 
 ```bash
 docker-compose up --build
@@ -66,3 +71,29 @@ docker-compose up --build
 
 - The Node.js API will be running at: http://localhost:3006
 - Adminer (for database management) will be available at: http://localhost:8080
+
+### 5. Set Up Frontend Environment
+
+```bash
+cd ../frontend
+touch .env
+```
+copy this to your local .env
+```bash
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+NEXTAUTH_URL=http://localhost:3000
+BACKEND_PORT=3006
+NEXT_PUBLIC_MY_BACKEND_API_URL=http://localhost:3006
+NEXT_PUBLIC_OFFICIAL_URL=https://pokeapi.co/api/v2/pokemon
+FRONTEND_PORT=3000
+NEXT_PUBLIC_MY_FRONTEND_API_URL=http://localhost:300
+```
+```bash
+npm install
+npm run dev
+```
+### 4. Access frotend Application
+
+- Next.js frontend web page can be access in http://localhost:3000/
+

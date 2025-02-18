@@ -1,10 +1,18 @@
-# Use the official PostgreSQL image from the Docker Hub
-FROM postgres:latest
+# Use Node.js as the base image
+FROM node:18
 
-# Environment variables for the default database and user
-ENV POSTGRES_DB=pokemon_db
-ENV POSTGRES_USER=youruser
-ENV POSTGRES_PASSWORD=yourpassword
+# Set the working directory
+WORKDIR /usr/src/app
 
-# Copy the initialization SQL script to the Docker image
-COPY init.sql /docker-entrypoint-initdb.d/
+# Copy package.json and install dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy the rest of the app
+COPY . .
+
+# Expose the backend port
+EXPOSE 3006
+
+# Start the application
+CMD ["npm", "run", "dev"]
