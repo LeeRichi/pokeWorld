@@ -45,7 +45,7 @@ const UserSearch = () => {
     []
 	);
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) =>
+  const handleKeyDown = (e: React.KeyboardEvent) =>
 	{
 		if (e.key === 'Enter') {
       // router.push(`/pokemon/${localSearchTerm}`);

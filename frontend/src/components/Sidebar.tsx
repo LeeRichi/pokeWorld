@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { User } from '@/types/type_User';
 
 interface SidebarProps
@@ -12,7 +12,7 @@ interface SidebarProps
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onEditProfileClick, onFriendsClick, user, setUser, onChangePassword }) => {
-  const router = useRouter();
+  // const router = useRouter();
 	// const [user, setUser] = useState<{ name?: string } | {username?: string} | null>(null);
 
   // const handleNavigation = (path: string) => {

@@ -44,7 +44,11 @@ const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user }) =>
         </button>
       </div>
       {isEditModalOpen && (
-        <EditProfileForm onClose={closeEditModal} initialData={{ name: session?.user?.name || '', email: session?.user?.email || '' }} />
+        <EditProfileForm onClose={closeEditModal} initialData={{
+          userId: String(user?.user_id) || '',
+          name: session?.user?.name || '',
+          email: session?.user?.email || ''
+        }} />
       )}
     </div>
   );

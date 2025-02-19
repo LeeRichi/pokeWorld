@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { User } from '@/types/type_User';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import EditProfileForm from '@/components/EditProfileForm';
 import FriendsList from '@/components/FriendsList';
-import { PokeDetail, Pokemon } from '@/types/type_Pokemon';
+import { PokeDetail } from '@/types/type_Pokemon';
 import defaultAvatar from '@/assests/default_avatar.jpg'
 import Card from '@/components/Card';
 import { ToastContainer } from 'react-toastify';
-import { motion } from 'framer-motion'
+// import { motion } from 'framer-motion'
 import ChangePasswordForm from '@/components/ChangePasswordForm';
 
 interface UserDetailProps
@@ -69,7 +69,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ user, setUser }) =>
 
   const calculateExperienceProgress = () => {
     if (!user) return 0;
-		const { exp, level } = user;
+		const { exp = 0 } = user;
 		const tempFakeLevel = 1;
 		// const expRequiredForNextLevel = level * 100;
 		const expRequiredForNextLevel = tempFakeLevel * 100;
