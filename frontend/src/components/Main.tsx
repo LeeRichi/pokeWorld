@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import FilterBar from './FilterBar';
-import { Pokemon, PokeDetail } from '../types/type_Pokemon';
+import { PokeDetail } from '../types/type_Pokemon';
 import { pokemonTypes } from '../pokemonTypes'
 import PaginationBtn from './PaginationBtn';
 import SkeletonCard from './SkeletonCard';
-import debounce from 'lodash/debounce';
+// import debounce from 'lodash/debounce';
 import {User} from '@/types/type_User';
 import { useRouter } from 'next/router';
-import { CgPokemon } from 'react-icons/cg';
+// import { CgPokemon } from 'react-icons/cg';
 import { ToastContainer } from 'react-toastify';
 
 const apiUrl = process.env.NEXT_PUBLIC_MY_BACKEND_API_URL;
@@ -25,7 +25,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	const [pokeDetails, setPokeDetails] = useState<PokeDetail[]>([]);
 
 	const [loading, setLoading] = useState<boolean>(true);
-	const [loadingMore, setLoadingMore] = useState<boolean>(false);
+	// const [loadingMore, setLoadingMore] = useState<boolean>(false);
 
 	//sorting and filtering algorithm
 	const [selectedType, setSelectedType] = useState('');
@@ -42,6 +42,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	// Search state
 	const [searchTerm, setSearchTerm] = useState('');
+	void searchTerm
 	const [suggestions, setSuggestions] = useState<PokeDetail[]>([]);
 
 	useEffect(() =>
@@ -188,7 +189,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 			/>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
 				{filteredPokemons.map((pokemon) => (
-					<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(pokemon.id)} user={user} onLikesChange={handleLikesChange}/>
+					<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(Number(pokemon.id))} user={user} onLikesChange={handleLikesChange}/>
 				))}
 			</div>
 			<PaginationBtn totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} restLoading={restLoading} />

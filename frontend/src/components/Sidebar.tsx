@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { User } from '@/types/type_User';
 
@@ -15,9 +15,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onEditProfileClick, onFriendsClick, u
   const router = useRouter();
 	// const [user, setUser] = useState<{ name?: string } | {username?: string} | null>(null);
 
-  const handleNavigation = (path: string) => {
-    router.push(path);
-  };
+  // const handleNavigation = (path: string) => {
+  //   router.push(path);
+  // };
 
 	const handleLogout = () => {
     localStorage.removeItem('token');

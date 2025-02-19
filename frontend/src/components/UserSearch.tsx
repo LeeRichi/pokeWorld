@@ -11,7 +11,8 @@ const UserSearch = () => {
   const router = useRouter();
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([])
+  void users
 
 	const [suggestions, setSuggestions] = useState([])
 
@@ -92,10 +93,10 @@ const UserSearch = () => {
         throw new Error('Failed to fetch users');
       }
 
-      const users = await response.json();
-			setUsers(users);
+      const searchUsers = await response.json();
+			setUsers(searchUsers);
 
-      const foundUser = users.find((user: { username: string }) =>
+      const foundUser = searchUsers.find((user: { username: string }) =>
         user.username.toLowerCase() === searchTerm.toLowerCase()
       );
 

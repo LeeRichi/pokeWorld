@@ -4,6 +4,7 @@ import { GoogleSignInBtn } from './GoogleSignInBtn';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { User } from '@/types/type_User';
+import Link from 'next/link';
 
 interface LoginProps
 {
@@ -14,6 +15,8 @@ const Login: React.FC<LoginProps> = ({setUser}) => {
   const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [auth_method, setAuth_method] = useState('local')
+	//temporary use void to avoid build complant
+	void setAuth_method;
 	const [showPassword, setShowPassword] = useState(false);
 
 	const redirect = useRouter();
@@ -105,9 +108,9 @@ return (
 				<div className="mt-4 text-center">
 					<p>
 						Dont have an account yet?{' '}
-						<a href="/signup" className="text-blue-500 hover:underline">
+						<Link href="/signup" className="text-blue-500 hover:underline">
 							Sign Up
-						</a>
+						</Link>
 					</p>
 				</div>
 			</div>

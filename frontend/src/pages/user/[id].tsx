@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { User } from '@/types/type_User';
 import defaultAvatar from '@/assests/default_avatar.jpg';
-import FriendsList from '@/components/FriendsList';
+// import FriendsList from '@/components/FriendsList';
 import Card from '@/components/Card';
 import { PokeDetail } from '@/types/type_Pokemon';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 interface UserDetailProps {
   user: User | null;
@@ -21,7 +21,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ user, setUser }) => {
 
   const [aSingleUser, setASingleUser] = useState<User | null>(null);
   const [friends, setFriends] = useState<{ id: number; name: string }[]>([]);
-  const [showFriendsList, setShowFriendsList] = useState(false);
+  void friends
+  // const [showFriendsList, setShowFriendsList] = useState(false);
 
 	useEffect(() =>
 	{
@@ -63,16 +64,16 @@ const UserDetail: React.FC<UserDetailProps> = ({ user, setUser }) => {
 
   const calculateExperienceProgress = () => {
     if (!aSingleUser) return 0;
-		const { exp, level } = aSingleUser;
+    const { exp = 0 } = aSingleUser; // Default to 0 if exp is undefined
 		const tempFakeLevel = 1;
 		// const expRequiredForNextLevel = level * 100;
 		const expRequiredForNextLevel = tempFakeLevel * 100;
 		return (exp / expRequiredForNextLevel) * 100;
   };
 
-  const closeFriendList = () => {
-    setShowFriendsList(false);
-  };
+  // const closeFriendList = () => {
+  //   setShowFriendsList(false);
+  // };
 
   if (status === 'loading') {
     return <div>Loading...</div>;

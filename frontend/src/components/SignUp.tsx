@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { User } from '@/types/type_User';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface SignUpProps
 {
@@ -71,7 +72,7 @@ const SignUp: React.FC<SignUpProps> = ({setUser}) =>
     <div className="flex items-center justify-center min-h-screen bg-gray-100 mt-6">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
 				<h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-				<GoogleSignInBtn />
+        <GoogleSignInBtn setUser={setUser} />
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
@@ -129,9 +130,9 @@ const SignUp: React.FC<SignUpProps> = ({setUser}) =>
         </form>
         <p className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{' '}
-          <a href="/login" className="text-blue-500 hover:underline">
+          <Link href="/login" className="text-blue-500 hover:underline">
             Log in
-          </a>
+          </Link>
         </p>
 			</div>
 			<ToastContainer />

@@ -9,7 +9,7 @@ interface TopbarProps {
 	setUser: (user: User | null) => void;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user, setUser }) =>
+const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user }) =>
 {
 
 	//temp
