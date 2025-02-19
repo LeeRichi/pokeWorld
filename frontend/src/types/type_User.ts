@@ -8,9 +8,9 @@ export interface User
 	email: string;
 	image?: string;
 	favorites?: PokeDetail;
-	level: number;
-	exp: number;
-	pokcoin: number;
-	friends: Array<string>;
-	favorite_pokemon_ids: number[];
+	level?: number;
+	exp?: number;
+	pokcoin?: number;
+	friends?: Array<string>;
+	favorite_pokemon_ids?: number[];
 }

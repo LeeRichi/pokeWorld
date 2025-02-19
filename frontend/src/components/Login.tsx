@@ -41,6 +41,7 @@ const Login: React.FC<LoginProps> = ({setUser}) => {
       });
 			setTimeout(() =>
 			{
+				console.log(data.user)
 				setUser(data.user)
         redirect.push('/');
       }, 2000);

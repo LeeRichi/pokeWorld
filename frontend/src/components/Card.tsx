@@ -7,7 +7,7 @@ import Heart from './Heart';
 import { User } from '@/types/type_User';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import router from 'next/router';
+// import router from 'next/router';
 
 const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: boolean | undefined, user: User | null, onLikesChange?: (pokemonId: string, newLikes: number) => void }> = ({ pokemon, userPageMode = false, isFavorite, user, onLikesChange}) => {
 	const [isFilled, setIsFilled] = useState(isFavorite);

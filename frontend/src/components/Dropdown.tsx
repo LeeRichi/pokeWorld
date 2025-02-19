@@ -1,5 +1,5 @@
 // Dropdown.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface DropdownProps {
   children: React.ReactNode;

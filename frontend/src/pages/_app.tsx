@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
       <div className="flex flex-col min-h-screen">
 				<Header user={user} setUser={setUser} />
         <main className="flex-grow">
-					<Component {...pageProps} user={user} setUser={setUser} />
+          <Component {...pageProps} user={user} setUser={setUser} />
         </main>
         <Footer />
 				<ToastContainer />

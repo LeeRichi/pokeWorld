@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { FaHeartBroken } from "react-icons/fa";
 
-const Heart: React.FC<{ isFilled: boolean }> = ({ isFilled }) => {
+const Heart: React.FC<{ isFilled: boolean | undefined }> = ({ isFilled }) => {
 	const [isHovered, setIsHovered] = useState(false);
 
 	return (

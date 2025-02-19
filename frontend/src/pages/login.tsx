@@ -7,7 +7,8 @@ interface LoginProps
 	setUser: (user: User | null) => void;
 }
 
-const LoginPage: React.FC<LoginProps> = ({setUser}) => {
+const LoginPage: React.FC<LoginProps> = ({ setUser }) =>
+{
   return (
 		<div>
 			<Login setUser={setUser}/>

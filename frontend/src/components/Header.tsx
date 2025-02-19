@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import pokeBall from '../assests/logo.png';
 import defaultAvatar from '../assests/default_avatar.jpg'
@@ -6,6 +6,7 @@ import { User } from '@/types/type_User';
 import Dropdown from './Dropdown';
 import UserSearch from './UserSearch';
 import { signOut } from "next-auth/react";
+import Link from 'next/link';
 
 interface HeaderProps {
   user: User | null;
@@ -36,22 +37,27 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
       <div className="px-4">
         <div className="flex items-center justify-between">
           <div className="flex shrink-0">
-            <a aria-current="page" className="flex items-center w-10" href="/">
+            <Link href="/" aria-current="page" className="flex items-center w-10">
               <Image src={pokeBall.src} alt="Poke Ball" width={40} height={40} />
               <p className="sr-only">Website Title</p>
-            </a>
+            </Link>
           </div>
           <div className="hidden md:flex md:items-center md:justify-center md:gap-5">
-            <a
+            <Link
+              href="/"
               aria-current="page"
               className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-              href="#"
             >
-              pokemon
-            </a>
-						<a className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900" href="#">
-              shopping center
-						</a>
+              Pokémon
+            </Link>
+            <span
+              className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-500 cursor-not-allowed relative"
+            >
+              Shopping Center
+              <span className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-max bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                Developing
+              </span>
+            </span>
           </div>
 					<div className="flex items-center justify-end gap-3 relative">
 						{/* cosider the heart and amount of likes */}

@@ -19,7 +19,6 @@ This project is a full-stack Pokémon application built with a Node.js backend, 
 ## Requirements
 
 - Docker
-- Docker Compose
 
 ## Getting Started
 
@@ -92,6 +91,15 @@ NEXT_PUBLIC_OFFICIAL_URL=https://pokeapi.co/api/v2/pokemon
 FRONTEND_PORT=3000
 NEXT_PUBLIC_MY_FRONTEND_API_URL=http://localhost:3000
 ```
+#### Setting Up Google OAuth
+To test Google Sign-In, create your own OAuth credentials:
+
+1. Go to [Google Developer Console](https://console.cloud.google.com/).
+2. Create a new project and enable **Google OAuth**.
+3. Add `http://localhost:3000/api/auth/callback/google` as an **authorized redirect URI**.
+4. Copy your **Client ID** and **Client Secret**.
+5. modify "GOOGLE_CLIENT_ID" and "GOOGLE_CLIENT_SECRET" in `.env.local`.
+
 ```bash
 npm install
 npm run dev
