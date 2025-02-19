@@ -92,7 +92,7 @@ FRONTEND_PORT=3000
 NEXT_PUBLIC_MY_FRONTEND_API_URL=http://localhost:3000
 ```
 #### Setting Up Google OAuth
-To test Google Sign-In, create your own OAuth credentials:
+To test Google Sign-In(optional), create your own OAuth credentials:
 
 1. Go to [Google Developer Console](https://console.cloud.google.com/).
 2. Create a new project and enable **Google OAuth**.
