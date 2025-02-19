@@ -56,10 +56,13 @@ JWT_SECRET=your_jwt_secret
 
 ### 3. Build and Run the Docker Containers
 - The project uses Docker Compose to build and run the application.
-First step is to make sure our docker app is running.
+First step is to make sure Docker daemon app is running.
 Run the following command to build and start all the containers:
 
 ```bash
+docker-compose run app sh
+npm install
+exit
 docker-compose up --build
 ```
 - This will:
@@ -87,13 +90,13 @@ BACKEND_PORT=3006
 NEXT_PUBLIC_MY_BACKEND_API_URL=http://localhost:3006
 NEXT_PUBLIC_OFFICIAL_URL=https://pokeapi.co/api/v2/pokemon
 FRONTEND_PORT=3000
-NEXT_PUBLIC_MY_FRONTEND_API_URL=http://localhost:300
+NEXT_PUBLIC_MY_FRONTEND_API_URL=http://localhost:3000
 ```
 ```bash
 npm install
 npm run dev
 ```
-### 4. Access frotend Application
+### 6. Access frotend Application
 
 - Next.js frontend web page can be access in http://localhost:3000/
 
