@@ -108,3 +108,15 @@ npm run dev
 
 - Next.js frontend web page can be access in http://localhost:3000/
 
+## Current Status
+
+I am currently working on deploying the full-stack Pokémon application to the cloud. The backend and frontend are ready, but I am facing a slight challenge in the deployment process, particularly related to NextAuth.js and the next.config.js file.
+
+While configuring Google Authentication with Next.js and NextAuth.js for the frontend, I encountered issues related to TypeScript compatibility and configuration in the next.config.js file. The application is currently running well in the local development environment, but I am working through resolving these deployment challenges to successfully deploy both the frontend and backend to the cloud.
+
+I plan to finalize the cloud deployment once these issues are resolved, and I will update this section with the next steps once the deployment process is complete.
+
+## Next Steps
+
+- Resolve TypeScript and configuration issues with NextAuth.js.
+- Finalize cloud deployment for both frontend and backend.
