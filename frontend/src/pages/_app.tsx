@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
         setUser(null);
 				toast.error("Session expired. Please log in again.");
 				// setTimeout(() => {
-					router.push('/login');
+        router.push('/login');
 				// }, 2000);
       }
     }

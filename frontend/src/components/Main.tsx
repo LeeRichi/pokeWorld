@@ -60,6 +60,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	const fetchUserDetails = async (id: number) =>
 	{
+		console.log(id)
 		const token = localStorage.getItem('token');
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users/${id}`, {

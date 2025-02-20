@@ -14,20 +14,27 @@ interface GoogleSignInBtnProps {
 
 export function GoogleSignInBtn({ setUser }: GoogleSignInBtnProps){
 	const { data: session, status } = useSession();
-	const router = useRouter();
+  const router = useRouter();
 
-  useEffect(() => {
+  console.log(session)
+  console.log(status)
+
+  useEffect(() =>
+  {
+    sessionStorage.clear();
+
     if (status === 'authenticated' && session) {
       const userInfo = {
         email: session.user?.email,
         username: session.user?.name,
         image: session.user?.image,
         auth_method: 'google',
-			};
+      };
 
-			console.log("session.user: " + JSON.stringify(session.user))
+      console.log("session.user: " + JSON.stringify(session.user))
 
-      const handleBackendLogin = async () => {
+      const handleBackendLogin = async () =>
+      {
         try {
           const res = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/login`, {
             method: 'POST',
@@ -37,7 +44,7 @@ export function GoogleSignInBtn({ setUser }: GoogleSignInBtnProps){
             body: JSON.stringify(userInfo),
           });
 
-					console.log(res.ok)
+          console.log(res.ok)
           if (res.ok) {
             const data = await res.json();
             localStorage.setItem('user', JSON.stringify(data.user));
@@ -70,12 +77,12 @@ export function GoogleSignInBtn({ setUser }: GoogleSignInBtnProps){
           toast.error('An error occurred during login.');
         }
       };
-
       handleBackendLogin();
     }
   }, [session, status, setUser, router]);
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = () =>
+  {
     signIn('google');
   };
 

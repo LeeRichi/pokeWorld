@@ -25,11 +25,11 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+
 		setDropdownVisible(false);
-		//temp
-		console.log('called')
-		signOut({ callbackUrl: '/login' }); // Redirects to login after signing out
-    window.location.href = '/';
+		signOut({ callbackUrl: '/login' });
 	};
 
   return (

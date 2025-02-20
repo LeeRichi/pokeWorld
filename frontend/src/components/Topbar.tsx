@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import EditProfileForm from '@/components/EditProfileForm';
 import { User } from '@/types/type_User';
 
 interface TopbarProps {
 	onFriendsClick: () => void;
-	user: User;
-	setUser: (user: User | null) => void;
+	user: User | null;
+	// setUser: (user: User | null) => void;
 }
 
 const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user }) =>
@@ -28,7 +28,9 @@ const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user }) =>
 	const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = '/login';
+    signOut({ callbackUrl: '/login' }); // Redirects to login after signing out
+
+    // window.location.href = '/login';
   };
 
   return (

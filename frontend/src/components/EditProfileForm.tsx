@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 interface EditProfileFormProps {
   onClose: () => void;
-  initialData: { name: string; email: string, userId: string };
+  initialData: { name: string; email: string, userId: string | number };
 }
 
 const EditProfileForm: React.FC<EditProfileFormProps> = ({ onClose, initialData }) =>

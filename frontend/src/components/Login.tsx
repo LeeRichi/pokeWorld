@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GoogleSignInBtn } from './GoogleSignInBtn';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { User } from '@/types/type_User';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 interface LoginProps
 {
@@ -20,6 +21,17 @@ const Login: React.FC<LoginProps> = ({setUser}) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const redirect = useRouter();
+
+	useEffect(() =>
+	{
+		localStorage.removeItem('token')
+		localStorage.removeItem('user')
+		localStorage.removeItem('nextauth.message')
+
+		console.log('login page')
+			// This will sign out the user as soon as they land on the login page
+		signOut({ redirect: false });
+	}, []);
 
   const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();

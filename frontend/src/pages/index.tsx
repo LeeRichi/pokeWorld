@@ -7,7 +7,8 @@ interface HomeProps {
 	setUser: (user: User | null) => void;
 }
 
-const Home: React.FC<HomeProps> = ({user, setUser}) => {
+const Home: React.FC<HomeProps> = ({ user, setUser }) =>
+{
   return (
     <div>
 			<Main user={user} setUser={setUser}/>

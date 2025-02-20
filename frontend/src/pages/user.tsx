@@ -101,7 +101,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ user, setUser }) =>
       </div>
       <div className="flex flex-1">
         <div className="hidden md:block">
-					<Sidebar onEditProfileClick={handleEditProfileClick} onChangePassword={toggleChangePasswordClick} onFriendsClick={toggleFriendsList} user={user} />
+          <Sidebar onEditProfileClick={handleEditProfileClick} onChangePassword={toggleChangePasswordClick} onFriendsClick={toggleFriendsList} user={user} setUser={setUser} />
         </div>
         <main className="flex-1 p-6 bg-white shadow-lg rounded-lg">
           <div className="flex items-center space-x-6 mb-6">

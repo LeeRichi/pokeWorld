@@ -7,7 +7,7 @@ export interface User
 	username?: string;
 	email: string;
 	image?: string;
-	favorites?: PokeDetail;
+	favorites?: PokeDetail[];
 	level?: number;
 	exp?: number;
 	pokcoin?: number;
