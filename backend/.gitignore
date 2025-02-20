@@ -1,3 +1,4 @@
 /node_modules
 
 .env
+my-key-pair.pem
