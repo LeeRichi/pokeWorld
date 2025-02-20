@@ -77,7 +77,7 @@ docker-compose up --build
 - The Node.js API will be running at: http://localhost:3006
 - Adminer (for database management) will be available at: http://localhost:8080
 
-### 5. Set Up Frontend Environment
+### 5. To Run Frontend Environment Locally (optional)
 
 ```bash
 cd ../frontend
@@ -88,11 +88,11 @@ copy this to your local .env
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 NEXTAUTH_URL=http://localhost:3000
-BACKEND_PORT=3006
-NEXT_PUBLIC_MY_BACKEND_API_URL=http://localhost:3006
 NEXT_PUBLIC_OFFICIAL_URL=https://pokeapi.co/api/v2/pokemon
 FRONTEND_PORT=3000
 NEXT_PUBLIC_MY_FRONTEND_API_URL=http://localhost:3000
+BACKEND_PORT=3006
+NEXT_PUBLIC_MY_BACKEND_API_URL=http://localhost:3006
 ```
 #### Setting Up Google OAuth
 To test Google Sign-In(optional), create your own OAuth credentials:
@@ -107,19 +107,10 @@ To test Google Sign-In(optional), create your own OAuth credentials:
 npm install
 npm run dev
 ```
-### 6. Access frotend Application
+#### Access frotend Application
 
 - Next.js frontend web page can be access in http://localhost:3000/
 
-## Current Status
-
-I am currently working on deploying the full-stack Pokémon application to the cloud. The backend and frontend are ready, but I am facing a slight challenge in the deployment process, particularly related to NextAuth.js and the next.config.js file.
-
-While configuring Google Authentication with Next.js and NextAuth.js for the frontend, I encountered issues related to TypeScript compatibility and configuration in the next.config.js file. The application is currently running well in the local development environment, but I am working through resolving these deployment challenges to successfully deploy both the frontend and backend to the cloud.
-
-I plan to finalize the cloud deployment once these issues are resolved, and I will update this section with the next steps once the deployment process is complete.
-
 ## Next Steps
 
-- Resolve TypeScript and configuration issues with NextAuth.js.
-- Finalize cloud deployment for both frontend and backend.
+- Finalize cloud deployment for backend.
