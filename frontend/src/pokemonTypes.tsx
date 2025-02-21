@@ -43,29 +43,6 @@ export const pokemonTypes = [
 	'unknown'
 ];
 
-// export const typeColors: Record<PokemonType, string> = {
-// 	grass: 'bg-green-300 text-indigo-800',
-//   normal: 'bg-gray-200 text-gray-800',
-//   fighting: 'bg-red-400 text-white',
-//   flying: 'bg-blue-200 text-blue-800',
-//   poison: 'bg-purple-300 text-purple-800',
-//   ground: 'bg-brown-300 text-white',
-//   rock: 'bg-yellow-200 text-yellow-800',
-//   bug: 'bg-green-200 text-green-800',
-//   ghost: 'bg-indigo-200 text-indigo-800',
-//   steel: 'bg-gray-400 text-white',
-//   fire: 'bg-red-300 text-white',
-//   water: 'bg-blue-300 text-white',
-//   electric: 'bg-yellow-300 text-black',
-//   psychic: 'bg-pink-300 text-white',
-//   ice: 'bg-cyan-200 text-black',
-//   dragon: 'bg-purple-500 text-white',
-//   dark: 'bg-gray-600 text-white',
-//   fairy: 'bg-pink-200 text-pink-800',
-//   stellar: 'bg-gray-500 text-white',
-//   unknown: 'bg-gray-300 text-gray-700',
-// };
-
 export const typeColors: Record<PokemonType, { backgroundColor: string; color: string }> = {
   grass: { backgroundColor: '#86efac', color: '#4f46e5' }, // bg-green-300 text-indigo-800
   normal: { backgroundColor: '#e5e7eb', color: '#1f2937' }, // bg-gray-200 text-gray-800

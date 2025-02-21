@@ -8,7 +8,9 @@ import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 
+const GA_TRACKING_ID = "G-XVTMR61Y98"; //safe in public
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 {
@@ -38,12 +40,35 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
     checkTokenExpiration();
 
     const interval = setInterval(checkTokenExpiration, 5 * 60 * 1000);
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+		const handleRouteChange = (url: string) => {
+			if (window.gtag) {
+				window.gtag("config", GA_TRACKING_ID, { page_path: url });
+			}
+		};
+		router.events.on('routeChangeComplete', handleRouteChange);
+		return () => {
+			router.events.off('routeChangeComplete', handleRouteChange);
+		};
+	}, [router.events]);
 
 
   return (
     <SessionProvider session={session}>
+
+      <Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
+			<Script id="google-analytics" strategy="afterInteractive">
+				{`
+					window.dataLayer = window.dataLayer || [];
+					function gtag(){dataLayer.push(arguments);}
+					gtag('js', new Date());
+					gtag('config', '${GA_TRACKING_ID}');
+				`}
+			</Script>
+
       <div className="flex flex-col min-h-screen">
 				<Header user={user} setUser={setUser} />
         <main className="flex-grow">

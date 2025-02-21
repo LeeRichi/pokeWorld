@@ -26,6 +26,7 @@ const getPokemons = async(req, res) => {
 		}
 		const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
 		const totalAmount = pokemonsResponse.data.count;
+		console.log(totalAmount)
 		const pokemons = pokemonsResponse.data.results;
 
     // Fetch likes data

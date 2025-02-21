@@ -12,6 +12,7 @@ https://pokeworld-leerichi-leerichis-projects.vercel.app
 - Backend: Node.js, Express
 - Database: PostgreSQL
 - Containerization: Docker
+- Deployment: AWS EC2/RDS, vercel
 
 ## Features
 
@@ -19,11 +20,10 @@ https://pokeworld-leerichi-leerichis-projects.vercel.app
 - User authentication (JWT) (google Auth)
 - Pokémon favorites functionality
 
-## Requirements
 
+## To Run Locally
+#### Requirements
 - Docker
-
-## Getting Started
 
 Follow these steps to get your development environment set up:
 
@@ -113,4 +113,5 @@ npm run dev
 
 ## Next Steps
 
-- Finalize cloud deployment for backend.
+- Adding store features with mapbox, websocket.
+- Adding more unit testings.

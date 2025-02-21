@@ -4,6 +4,6 @@ void NextAuth
 
 declare module "next-auth" {
   interface Session {
-    accessToken?: string; // Add your custom property here
+    accessToken?: string;
   }
 }
