@@ -9,6 +9,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/router';
 import Script from 'next/script';
+import Head from 'next/head';
 
 const GA_TRACKING_ID = "G-XVTMR61Y98"; //safe in public
 
@@ -57,7 +58,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 
 
   return (
-    <SessionProvider session={session}>
+		<SessionProvider session={session}>
+			<Head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+      </Head>
 
       <Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
 			<Script id="google-analytics" strategy="afterInteractive">

@@ -6,14 +6,10 @@ import { User } from '@/types/type_User';
 interface TopbarProps {
 	onFriendsClick: () => void;
 	user: User | null;
-	// setUser: (user: User | null) => void;
 }
 
 const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user }) =>
 {
-
-	//temp
-	console.log(user)
   const { data: session } = useSession();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
@@ -28,9 +24,7 @@ const Topbar: React.FC<TopbarProps> = ({ onFriendsClick, user }) =>
 	const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    signOut({ callbackUrl: '/login' }); // Redirects to login after signing out
-
-    // window.location.href = '/login';
+    signOut({ callbackUrl: '/login' });
   };
 
   return (
