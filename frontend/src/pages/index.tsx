@@ -3,12 +3,19 @@ import Main from '../components/Main';
 import { User } from '@/types/type_User';
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
-console.log('heeeello: ', process.env.BACKEND_URL)
+console.log('heeeello: ', process.env.NEXT_PUBLIC_MY_BACKEND_API_URL)
+console.log('BACKEND_URL: ', process.env.BACKEND_URL)
+
+//temp solution
+const backend_url =  process.env.NEXT_PUBLIC_MY_BACKEND_API_URL || 'https://pokeworld2.duckdns.org'
+// const backend_url =  process.env.BACKEND_URL || 'http://localhost:3006'
+
+
+console.log(backend_url)
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: 'http://localhost:3006/graphql',
-    // uri: `${process.env.BACKEND_URL}/graphql`,
+    uri: `${backend_url}/graphql`,
   }),
   cache: new InMemoryCache(),
 });

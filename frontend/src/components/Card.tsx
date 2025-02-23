@@ -9,8 +9,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
 import notFoundImage from '../assests/not_found.png';
-import { Span } from 'next/dist/trace';
-import { isEmpty } from 'lodash';
+// import { Span } from 'next/dist/trace';
+// import { isEmpty } from 'lodash';
 // import router from 'next/router';
 
 const Card: React.FC<{ pokemon: PokeDetail, userPageMode: boolean, isFavorite: boolean | undefined, user: User | null, onLikesChange?: (pokemonId: string, newLikes: number) => void }> = ({ pokemon, userPageMode = false, isFavorite, user, onLikesChange}) => {

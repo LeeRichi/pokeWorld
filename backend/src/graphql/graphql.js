@@ -12,7 +12,11 @@ const resolvers = {
             sort: args.sort,
             order: args.order
           }
-				});
+        });
+
+        if (!result) {
+          console.error("No result received:", result);
+        }
 
 				console.log('yoooooooo! in graphql file: ', result)
 

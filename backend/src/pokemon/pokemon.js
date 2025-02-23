@@ -25,13 +25,13 @@ const getPokemons = async (req, res) =>
 		const limit = parseInt(req.query.limit) || 20;
 		const offset = (page - 1) * limit;
 		const sortOrder = req.query.order === 'desc' ? 'desc' : 'asc';
-		const currentTime = Date.now();
-		const cacheKey = `page:${page}-limit:${limit}`;
+		// const currentTime = Date.now();
+		// const cacheKey = `page:${page}-limit:${limit}`;
 
-		if (cache[cacheKey] && currentTime - cache[cacheKey].timestamp < CACHE_EXPIRATION_TIME) {
-      // return res.json(cache[cacheKey].data); //restapi(old)
-      return cache[cacheKey].data;
-    }
+		// if (cache[cacheKey] && currentTime - cache[cacheKey].timestamp < CACHE_EXPIRATION_TIME) {
+    //   // return res.json(cache[cacheKey].data); //restapi(old)
+    //   return cache[cacheKey].data;
+    // }
 
 		const sortField = req.query.sort || 'id';
 		const validSortFields = ['id', 'name', 'likes'];
@@ -90,10 +90,10 @@ const getPokemons = async (req, res) =>
         return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
       }
     });
-    cache[cacheKey] = {
-      timestamp: Date.now(),
-      data: combinedData
-    };
+    // cache[cacheKey] = {
+    //   timestamp: Date.now(),
+    //   data: combinedData
+    // };
     // res.json(combinedData)
 
     // console.log(combinedData)

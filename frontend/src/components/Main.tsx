@@ -48,7 +48,7 @@ const GET_POKEMONS = gql`
   }
 `;
 
-const apiUrl = process.env.NEXT_PUBLIC_MY_BACKEND_API_URL;
+// const apiUrl = process.env.NEXT_PUBLIC_MY_BACKEND_API_URL;
 
 interface MainProps {
   user: User | null;
@@ -86,7 +86,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
   const [totalPages, setTotalPages] = useState(0);
 
-  const { data, loading, error, fetchMore } = useQuery(GET_POKEMONS, {
+  const { data, loading, error } = useQuery(GET_POKEMONS, {
     // fetchPolicy: "network-only", // Forces fresh API call instead of using cache
     variables: { page: currentPage, limit: itemsPerPage, sort, order },
   });
