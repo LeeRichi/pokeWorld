@@ -12,11 +12,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.13.1",
+    "@aws-sdk/client-secrets-manager": "^3.750.0",
+    "apollo-server-express": "^3.13.0",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "graphql": "^16.10.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.0"
   },

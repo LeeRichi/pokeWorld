@@ -3,8 +3,11 @@ const express = require('express');
 const app = express();
 const pool = require('./db');
 
+const graphqlApp = require('./graphql/graphql');
 const cors = require('cors');
 app.use(cors());
+
+const startServer = require('./graphql/index');
 
 const { register } = require('./auth/register');
 const { login } = require('./auth/login');
@@ -14,8 +17,8 @@ const { getUserById, getAllUsers, getUserFavorites, addFavoritePokemon, removeFa
 
 app.use(express.json())
 
-app.get('/api/pokemonsquantity', getPokemonsQuantity);
 app.get('/api/pokemons', getPokemons);
+app.get('/api/pokemonsquantity', getPokemonsQuantity);
 
 app.post('/api/register', register);
 app.post('/api/login', login);
@@ -42,6 +45,12 @@ pool.connect()
     console.error('Database connection error:', err.message);
   });
 
-app.listen(process.env.BACKEND_PORT, () => {
-  console.log(`Server running on port ${process.env.BACKEND_PORT}`);
+// app.listen(process.env.BACKEND_PORT, () => {
+//   console.log(`Server running on port ${process.env.BACKEND_PORT}`);
+// });
+
+startServer(app).then(() => {
+  app.listen(process.env.BACKEND_PORT, () => {
+    console.log(`Server running on port ${process.env.BACKEND_PORT}`);
+  });
 });

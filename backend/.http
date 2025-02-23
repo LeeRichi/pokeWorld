@@ -1,0 +1,5 @@
+# POST http://localhost:3006/api/login
+# {
+#   "username": "yourUsername",
+#   "password": "yourPassword"
+# }

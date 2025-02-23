@@ -5,7 +5,8 @@ const getPokemonsQuantity = async (req, res) =>
 {
 	try {
 		const data = await axios.get(`https://pokeapi.co/api/v2/pokemon`);
-		res.json(data.data.count)
+		// res.json(data.data.count) //restapi(old)
+		return data.data.count;
 	} catch (error) {
 		console.error(error)
 	}
@@ -28,17 +29,19 @@ const getPokemons = async (req, res) =>
 		const cacheKey = `page:${page}-limit:${limit}`;
 
 		if (cache[cacheKey] && currentTime - cache[cacheKey].timestamp < CACHE_EXPIRATION_TIME) {
-      return res.json(cache[cacheKey].data);
+      // return res.json(cache[cacheKey].data); //restapi(old)
+      return cache[cacheKey].data;
     }
 
 		const sortField = req.query.sort || 'id';
 		const validSortFields = ['id', 'name', 'likes'];
 		if (!validSortFields.includes(sortField)) {
-			return res.status(400).json({ error: 'Invalid sort field' });
+      // return res.status(400).json({ error: 'Invalid sort field' }); //restapi(old)
+      throw new Error('Invalid sort field');
 		}
 		const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
 		const totalAmount = pokemonsResponse.data.count;
-		const pokemons = pokemonsResponse.data.results;
+    const pokemons = pokemonsResponse.data.results;
 
     const likesResult = await pool.query(`
       SELECT pokemon_id, COUNT(user_id) AS likes
@@ -53,7 +56,8 @@ const getPokemons = async (req, res) =>
     const combinedData = await Promise.all(pokemons.map(async (pokemon) => {
 			const detailResponse = await axios.get(pokemon.url);
 			const { id, name, sprites, height, weight, types } = detailResponse.data;
-			const likes = likesMap.get(id) || 0;
+      const likes = likesMap.get(id) || 0;
+      // const typeNames = types.map(type => type.type.name);
 
 			return {
 				id,
@@ -73,9 +77,9 @@ const getPokemons = async (req, res) =>
 				},
 				height,
 				weight,
-				types
+        types
 			};
-		}));
+    }));
 
 		combinedData.sort((a, b) => {
       if (sortField === 'likes') {
@@ -90,7 +94,13 @@ const getPokemons = async (req, res) =>
       timestamp: Date.now(),
       data: combinedData
     };
-		res.json(combinedData)
+    // res.json(combinedData)
+
+    // console.log(combinedData)
+		return {
+      total: totalAmount,
+      pokemons: combinedData
+    };
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
