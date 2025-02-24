@@ -121,12 +121,11 @@ query Pokemons {
           },
           "height": 7,
           "weight": 69,
-          "types": [{
-						...
-					}]
-				}]
-		}
-		...
+          "types": [{...}]
+        }
+      ]
+    }
+  ...
 }
 ```
 
