@@ -1,4 +1,3 @@
-// graphql/index.js
 const { ApolloServer } = require('apollo-server-express');
 const { resolvers } = require('./graphql');
 const { typeDefs } = require('./schema')
@@ -11,7 +10,7 @@ const startServer = async (app) => {
     resolvers,
     introspection: true,
     context: async ({ req }) => {
-      req.setTimeout(10000); // 10 seconds
+      req.setTimeout(10000);
       return {};
     }
   });

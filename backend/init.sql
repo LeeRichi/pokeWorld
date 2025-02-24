@@ -1,3 +1,5 @@
+---- This file can help you to set up some mock data at the begining
+
 DROP TABLE IF EXISTS user_items;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS favorites;

@@ -10,7 +10,6 @@ console.log('BACKEND_URL: ', process.env.BACKEND_URL)
 const backend_url =  process.env.NEXT_PUBLIC_MY_BACKEND_API_URL || 'https://pokeworld2.duckdns.org'
 // const backend_url =  process.env.BACKEND_URL || 'http://localhost:3006'
 
-
 console.log(backend_url)
 
 const client = new ApolloClient({
