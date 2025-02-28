@@ -47,8 +47,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    pokemons(page: Int, limit: Int, sort: String, order: String): PokemonPage
-    pokemonsQuantity: Int
+    pokemons(page: Int, limit: Int, sort: String, order: String, type: String): PokemonPage
+    pokemonsByTypes(type: String): PokemonPage
   }
 
 `;

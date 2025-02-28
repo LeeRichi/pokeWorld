@@ -6,13 +6,15 @@ interface FilterBarProps {
   types: string[];
   onTypeChange: (selectedType: string) => void;
 	onSortChange: (sortBy: string) => void;
-	onSearch: (searchTerm: string) => void;
-  suggestions: PokeDetail[];
-  setSearchTerm: (term: string) => void;
+  // onSearch: (searchTerm: string) => void;
+  selectedType: string;
+  setSelectedType: (selectedType: string) => void;
+  // suggestions: PokeDetail[];
+  // setSearchTerm: (term: string) => void;
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange, onSearch, suggestions, setSearchTerm}) => {
-  const [selectedType, setSelectedType] = useState('');
+const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange, selectedType, setSelectedType}) => {
+  // const [selectedType, setSelectedType] = useState('');
   const [sortOption, setSortOption] = useState('');
 
   const handleTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -31,7 +33,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange
   return (
     <div className="p-4 bg-white rounded-lg flex items-center space-x-4 flex-wrap justify-center">
 
-			<SearchBar onSearch={onSearch} suggestions={suggestions} setSearchTerm={setSearchTerm}/>
+			<SearchBar />
 
       <div className="mr-4 mb-4">
         <select

@@ -1,8 +1,9 @@
-const { getPokemons, getPokemonsQuantity } = require('../pokemon/pokemon');
+const { getPokemons, getPokemonsByTypes } = require('../pokemon/pokemon');
 
 const resolvers = {
   Query: {
     pokemons: async (_, args) => {
+      console.log("args: ", args)
 			try
 			{
         const result = await getPokemons({
@@ -10,7 +11,8 @@ const resolvers = {
             page: args.page,
             limit: args.limit,
             sort: args.sort,
-            order: args.order
+            order: args.order,
+            type: args.type
           }
         });
 
@@ -18,20 +20,29 @@ const resolvers = {
           console.error("No result received:", result);
         }
 
-				console.log('yoooooooo! in graphql file: ', result)
-
 				return {total: result.total, pokemons: result.pokemons}
       } catch (error) {
         console.error('Error fetching pokemons:', error);
         throw new Error('Failed to fetch Pokémon');
       }
     },
-    pokemonsQuantity: async () => {
-      try {
-        return await getPokemonsQuantity();
+    pokemonsByTypes: async (_, args) => {
+      console.log("args: ", args)
+			try
+			{
+        const result = await getPokemonsByTypes({
+          query: {
+            type: args.type
+          }
+        });
+
+        if (!result) {
+          console.error("No result received:", result);
+        }
+				return {total: result.total, pokemons: result.pokemons}
       } catch (error) {
-        console.error('Error fetching Pokémon quantity:', error);
-        throw new Error('Failed to fetch Pokémon count');
+        console.error('Error fetching pokemons:', error);
+        throw new Error('Failed to fetch Pokémon');
       }
     }
   }

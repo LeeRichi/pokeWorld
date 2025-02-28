@@ -81,7 +81,7 @@ const PaginationBtn: React.FC<PaginationBtnProps> = ({ totalPages, currentPage, 
 	};
 
 	return (
-		<div className="flex justify-center mt-4">
+		<div className="flex justify-center mt-4 mb-6">
 			{getPaginationButtons()}
 		</div>
 	);

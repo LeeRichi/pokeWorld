@@ -12,13 +12,15 @@ const startServer = require('./graphql/index');
 const { register } = require('./auth/register');
 const { login } = require('./auth/login');
 const { authenticateToken } = require('./auth/authMiddleware');
-const { getPokemonsQuantity, getPokemons } = require('./pokemon/pokemon')
+const { getPokemonsByTypes, getPokemons, get_pokemon_names} = require('./pokemon/pokemon')
 const { getUserById, getAllUsers, getUserFavorites, addFavoritePokemon, removeFavoritePokemon, editUserInfo, changePassword, searchUser } = require('./user/user');
 
 app.use(express.json())
 
-app.get('/api/pokemons', getPokemons);
-app.get('/api/pokemonsquantity', getPokemonsQuantity);
+// app.get('/api/pokemons', getPokemons);
+// app.get('/api/pokemonsByTypes', getPokemonsByTypes);
+
+app.get('/api/pokemons_names', get_pokemon_names);
 
 app.post('/api/register', register);
 app.post('/api/login', login);
