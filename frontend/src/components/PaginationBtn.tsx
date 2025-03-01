@@ -8,7 +8,6 @@ interface PaginationBtnProps {
 }
 
 const PaginationBtn: React.FC<PaginationBtnProps> = ({ totalPages, currentPage, setCurrentPage, restLoading }) => {
-	console.log(currentPage)
 	const getPaginationButtons = () => {
 		const buttons = [];
 		const halfMaxButtons = Math.floor(maxButtonsToShow / 2);

@@ -2,7 +2,9 @@ import React, { useState, ChangeEvent } from 'react';
 import SearchBar from './SearchBar';
 import { PokeDetail } from '@/types/type_Pokemon';
 
-interface FilterBarProps {
+interface FilterBarProps
+{
+  sortBy: string;
   types: string[];
   onTypeChange: (selectedType: string) => void;
 	onSortChange: (sortBy: string) => void;
@@ -13,9 +15,10 @@ interface FilterBarProps {
   // setSearchTerm: (term: string) => void;
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange, selectedType, setSelectedType}) => {
+const FilterBar: React.FC<FilterBarProps> = ({ sortBy, types, onTypeChange, onSortChange, selectedType, setSelectedType}) => {
   // const [selectedType, setSelectedType] = useState('');
-  const [sortOption, setSortOption] = useState('');
+  // const [sortOption, setSortOption] = useState('');
+  // console.log(sortOption)
 
   const handleTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
@@ -25,7 +28,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange
 
   const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const sortValue = e.target.value;
-    setSortOption(sortValue);
+    console.log(sortValue)
+    // setSortOption(sortValue);
 		onSortChange(sortValue);
 		console.log(sortValue)
   };
@@ -57,16 +61,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ types, onTypeChange, onSortChange
         </label>
         <select
           id="sort-options"
-          value={sortOption}
+          value={sortBy}
           onChange={handleSortChange}
           className="block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-12"
         >
 					<option value="id">ID</option>
 					<option value="reverse-id">ID descending</option>
 					<option value="name">Name</option>
-					<option value="reverse-name">Name descending</option>
+					{/* <option value="reverse-name">Name descending</option>
 					<option value="likes">Likes</option>
-					<option value="reverse-likes">Likes descending</option>
+					<option value="reverse-likes">Likes descending</option> */}
         </select>
       </div>
     </div>

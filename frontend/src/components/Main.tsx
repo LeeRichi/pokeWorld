@@ -15,8 +15,8 @@ import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 
 const GET_POKEMONS = gql`
-  query GetPokemons($page: Int, $limit: Int, $sort: String, $order: String, $type: String) {
-    pokemons(page: $page, limit: $limit, sort: $sort, order: $order, type: $type) {
+  query GetPokemons($page: Int, $limit: Int, $sortBy: String, $total_len: Int) {
+    pokemons(page: $page, limit: $limit, sortBy: $sortBy, total_len: $total_len) {
       total
       pokemons {
         id
@@ -90,7 +90,8 @@ interface MainProps {
 const Main: React.FC<MainProps> = ({ user, setUser }) =>
 {
 	const router = useRouter();
-  const [pokeDetails, setPokeDetails] = useState<PokeDetail[]>([]);
+	const [pokeDetails, setPokeDetails] = useState<PokeDetail[]>([]);
+	const [total_len, setTotal_len] = useState(0)
 
   console.log(pokeDetails)
 
@@ -99,13 +100,15 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	//sorting and filtering algorithm
 	const [selectedType, setSelectedType] = useState('');
-
-	console.log(selectedType)
 	const [sortBy, setSortBy] = useState('id');
+
+	console.log(sortBy)
 
 	const [sort, setSort] = useState('id');
 	const [order, setOrder] = useState('asc');
 	// const [quantity, setQuantity] = useState(0);
+
+	console.log('look here: ', sort, order)
 
 	//pagination
 	const [currentPage, setCurrentPage] = useState(1);
@@ -126,11 +129,11 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	const { data, loading, error } = useQuery(GET_POKEMONS, {
 		skip: !!selectedType, // Skip if a type is selected
-    variables: { page: currentPage, limit: itemsPerPage, sort, order },
+    variables: { page: currentPage, limit: itemsPerPage, sortBy, total_len },
 	});
 
 	const { data: typeData, loading: typeLoading, error: typeError } = useQuery(GET_POKEMONS_BY_TYPE, {
-		skip: !selectedType, // Don't run this query if no type is selected
+		skip: !selectedType,
 		variables: { type: selectedType },
 	});
 
@@ -167,6 +170,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 		if (data && data.pokemons) {
 			console.log('triggered')
 			setPokeDetails(data.pokemons.pokemons);
+			setTotal_len(data.pokemons.total)
 			setTotalPages(Math.ceil(data.pokemons.total / itemsPerPage));
 			setRestLoading(false);
 		}
@@ -174,7 +178,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	useEffect(() => {
     if (typeData && typeData.pokemonsByTypes) {
-      setPokeDetails(typeData.pokemonsByTypes.pokemons);
+			setPokeDetails(typeData.pokemonsByTypes.pokemons);
       setTotalPages(Math.ceil(typeData.pokemonsByTypes.total / itemsPerPage));
       setRestLoading(false);
     }
@@ -224,8 +228,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	const handleTypeChange = (type: string) =>
 	{
 		setSelectedType(type);
-
-
 		setCurrentPage(1);
 	};
 
@@ -234,28 +236,25 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 		setSortBy(sortBy);
 	};
 
-	// const handleSearch = (term: string) =>
-	// {
-	// 	setSearchTerm(term);
-	// 	if (term) {
-	// 		const filteredSuggestions = pokeDetails?.filter(pokemon =>
-	// 			pokemon.name.toLowerCase().includes(term.toLowerCase())
-	// 		);
-	// 		setSuggestions(filteredSuggestions);
-	// 	} else {
-	// 		setSuggestions([]);
-	// 	}
-	// };
-
   if (loading || typeLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 mt-60">
-        {[...Array(itemsPerPage)]?.map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
-      </div>
+      <div className='mt-32'>
+				<FilterBar
+					sortBy={sortBy}
+					types={pokemonTypes}
+					selectedType={selectedType}
+					setSelectedType={setSelectedType}
+					onTypeChange={handleTypeChange}
+					onSortChange={handleSortChange}
+					/>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+					{[...Array(itemsPerPage)]?.map((_, index) => (
+						<SkeletonCard key={index} />
+					))}
+				</div>
+			</div>
     );
-  }
+	}
 
   if (error || typeError) {
     return <p>Error: {error?.message || typeError?.message}</p>;
@@ -296,38 +295,37 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	  return null;
   }
 
-  return (
+	return (
 		<div className='mt-32'>
 			<ToastContainer />
 			<FilterBar
+				sortBy={sortBy}
 				types={pokemonTypes}
-				// onSearch={handleSearch}
-				// suggestions={suggestions}
 				selectedType={selectedType}
 				setSelectedType={setSelectedType}
-				// setSearchTerm={setSearchTerm}
 				onTypeChange={handleTypeChange}
 				onSortChange={handleSortChange}
 			/>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-				{
-					selectedType ?
-						(
-							pokeDetails?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((pokemon) => (
-								<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(Number(pokemon.id))} user={user} onLikesChange={handleLikesChange}/>
-							))
-						)
-						:
-						(
-							pokeDetails?.map((pokemon) => (
-								<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(Number(pokemon.id))} user={user} onLikesChange={handleLikesChange}/>
-							))
-						)
-				}
+				{loading || typeLoading ? (
+					[...Array(itemsPerPage)].map((_, index) => (
+						<SkeletonCard key={index} />
+					))
+				) : (
+					selectedType ? (
+						pokeDetails?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((pokemon) => (
+							<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(Number(pokemon.id))} user={user} onLikesChange={handleLikesChange}/>
+						))
+					) : (
+						pokeDetails?.map((pokemon) => (
+							<Card key={pokemon.name} pokemon={pokemon} userPageMode={false} isFavorite={user?.favorite_pokemon_ids?.includes(Number(pokemon.id))} user={user} onLikesChange={handleLikesChange}/>
+						))
+					)
+				)}
 			</div>
 			<PaginationBtn totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} restLoading={restLoading} />
 		</div>
-  );
+	);
 };
 
 export default Main;

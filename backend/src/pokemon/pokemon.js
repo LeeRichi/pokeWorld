@@ -1,3 +1,4 @@
+const { off } = require('process');
 const pool = require('../db');
 const axios = require('axios');
 
@@ -39,9 +40,17 @@ const getPokemons = async (req, res) =>
 	{
 		const page = parseInt(req.query.page) || 1;
 		const limit = parseInt(req.query.limit) || 20;
-		const offset = (page - 1) * limit;
-		const sortOrder = req.query.order === 'desc' ? 'desc' : 'asc';
-		const type = req.query.type || '';
+		let offset = (page - 1) * limit;
+		const sortBy = req.query.sortBy;
+		//temp
+		const total_len = req.query.total_len || 0;
+
+		if (sortBy === 'reverse-id')
+		{
+			offset = total_len - limit * page;
+		}
+
+		// const type = req.query.type || '';
 		// const currentTime = Date.now();
 		// const cacheKey = `page:${page}-limit:${limit}`;
 
@@ -56,9 +65,21 @@ const getPokemons = async (req, res) =>
       // return res.status(400).json({ error: 'Invalid sort field' }); //restapi(old)
       throw new Error('Invalid sort field');
 		}
-		const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}&types=${type}&order=${sortOrder}`);
+		if (sortBy === 'name')
+		{
+			const allNamesRes = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit:${total_len}`);
+			const pokemonsAllNames = allNamesRes.data.results;
+
+			pokemonsAllNames.sort((a, b) => a.name.localeCompare(b.name));
+		}
+		// else
+		// {
+
+		// }
+		const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
 		const totalAmount = pokemonsResponse.data.count;
-    const pokemons = pokemonsResponse.data.results;
+		const pokemons = pokemonsResponse.data.results;
+
 
     // Fetch detailed Pokémon data and combine with likes
     const basicData = await Promise.all(pokemons.map(async (pokemon) => {

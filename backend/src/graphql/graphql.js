@@ -10,9 +10,8 @@ const resolvers = {
           query: {
             page: args.page,
             limit: args.limit,
-            sort: args.sort,
-            order: args.order,
-            type: args.type
+            sortBy: args.sortBy,
+            total_len: args.total_len
           }
         });
 
