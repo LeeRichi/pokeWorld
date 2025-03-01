@@ -1,17 +1,5 @@
-const { off } = require('process');
 const pool = require('../db');
 const axios = require('axios');
-
-// const getPokemonsQuantity = async (req, res) =>
-// {
-// 	try {
-// 		const data = await axios.get(`https://pokeapi.co/api/v2/pokemon`);
-// 		// res.json(data.data.count) //restapi(old)
-// 		return data.data.count;
-// 	} catch (error) {
-// 		console.error(error)
-// 	}
-// }
 
 let cachedPokemons = null;
 let lastFetchedTime = 0;
@@ -34,6 +22,25 @@ const likeMap = async(pokemons) =>
 	});
 }
 
+//compare to likeMap, this function is for all pokemons, before fetch each details, compare there id with likes-id pairs in db
+const likeMapAll = async (allPokemonsSimpleData) =>
+{
+  const likesResult = await pool.query(`
+		SELECT pokemon_id, COUNT(user_id) AS likes
+		FROM favorites
+		GROUP BY pokemon_id
+	`);
+
+  const likesMap = new Map(likesResult.rows.map(like => [like.pokemon_id, parseInt(like.likes)]));
+
+  return allPokemonsSimpleData.map(pokemon => {
+    const url = pokemon.url;
+    const id = url.split('/').filter(Boolean).pop();
+    const likes = likesMap.get(Number(id)) || 0;
+    return { ...pokemon, likes };
+	});
+}
+
 const getPokemons = async (req, res) =>
 {
 	try
@@ -42,15 +49,12 @@ const getPokemons = async (req, res) =>
 		const limit = parseInt(req.query.limit) || 20;
 		let offset = (page - 1) * limit;
 		const sortBy = req.query.sortBy;
-		//temp
 		const total_len = req.query.total_len || 0;
 
 		if (sortBy === 'reverse-id')
 		{
 			offset = total_len - limit * page;
 		}
-
-		// const type = req.query.type || '';
 		// const currentTime = Date.now();
 		// const cacheKey = `page:${page}-limit:${limit}`;
 
@@ -65,21 +69,35 @@ const getPokemons = async (req, res) =>
       // return res.status(400).json({ error: 'Invalid sort field' }); //restapi(old)
       throw new Error('Invalid sort field');
 		}
-		if (sortBy === 'name')
+		let pokemons;
+		let totalAmount;
+		if (sortBy === 'name' || sortBy === 'reverse-name' || sortBy === 'reverse-likes' || sortBy === 'likes')
 		{
-			const allNamesRes = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit:${total_len}`);
-			const pokemonsAllNames = allNamesRes.data.results;
-
-			pokemonsAllNames.sort((a, b) => a.name.localeCompare(b.name));
+			const allNamesRes = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${total_len}`);
+			totalAmount = allNamesRes.data.results.length;
+			pokemons = allNamesRes.data.results;
+      if (sortBy === 'reverse-name')
+        pokemons.sort((a, b) => b.name.localeCompare(a.name));
+      else if (sortBy === 'name')
+        pokemons.sort((a, b) => a.name.localeCompare(b.name));
+      else if (sortBy === 'reverse-likes')
+      {
+        pokemons = await likeMapAll(pokemons);
+        pokemons.sort((a, b) => b.likes - a.likes);
+      }
+      else if (sortBy === 'likes')
+      {
+        pokemons = await likeMapAll(pokemons);
+        pokemons.sort((a, b) => a.likes - b.likes);
+      }
+      pokemons = pokemons.slice(offset, offset + limit);
+    }
+		else //default case
+		{
+			const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
+			totalAmount = pokemonsResponse.data.count;
+			pokemons = pokemonsResponse.data.results;
 		}
-		// else
-		// {
-
-		// }
-		const pokemonsResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
-		const totalAmount = pokemonsResponse.data.count;
-		const pokemons = pokemonsResponse.data.results;
-
 
     // Fetch detailed Pokémon data and combine with likes
     const basicData = await Promise.all(pokemons.map(async (pokemon) => {
@@ -89,7 +107,6 @@ const getPokemons = async (req, res) =>
 			return {
 				id,
 				name,
-				// likes,
 				sprites: {
 					front_default: sprites.front_default,
 					other: {
@@ -108,31 +125,8 @@ const getPokemons = async (req, res) =>
 			};
 		}));
 
-		// const likesResult = await pool.query(`
-		// 	SELECT pokemon_id, COUNT(user_id) AS likes
-		// 	FROM favorites
-		// 	GROUP BY pokemon_id
-		// `);
-
-		// // Create a map for quick look-up of likes by pokemon_id
-		// const likesMap = new Map(likesResult.rows.map(like => [like.pokemon_id, parseInt(like.likes)]));
-
-		// const combinedData = basicData.map(pokemon => {
-		// 	const likes = likesMap.get(pokemon.id) || 0;
-		// 	return { ...pokemon, likes };
-		// });
-
 		const combinedData = likeMap(basicData)
 
-		// combinedData.sort((a, b) => {
-		// 	if (sortField === 'likes') {
-		// 		return sortOrder === 'asc' ? a.likes - b.likes : b.likes - a.likes;
-		// 	} else if (sortField === 'name') {
-		// 		return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-		// 	} else {
-		// 		return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
-		// 	}
-		// });
 		// cache[cacheKey] = {
 			//   timestamp: Date.now(),
 			//   data: combinedData
@@ -193,9 +187,10 @@ const getPokemonsByTypes = async (req, res) => {
   }
 };
 
+//for searching-bar purpose
 const get_pokemon_names = async (req, res) => {
 	try {
-		const result = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=1304`);
+		const result = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=1304`); //should this be hardcoded?
 		const names = result.data.results.map(pokemon => pokemon.name);
 
 		res.json(names);

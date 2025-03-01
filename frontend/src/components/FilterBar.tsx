@@ -68,9 +68,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ sortBy, types, onTypeChange, onSo
 					<option value="id">ID</option>
 					<option value="reverse-id">ID descending</option>
 					<option value="name">Name</option>
-					{/* <option value="reverse-name">Name descending</option>
+					<option value="reverse-name">Name descending</option>
 					<option value="likes">Likes</option>
-					<option value="reverse-likes">Likes descending</option> */}
+					<option value="reverse-likes">Likes descending</option>
         </select>
       </div>
     </div>
