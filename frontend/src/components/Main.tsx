@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
+import ErrorPage from './ErrorPage.tsx';
 
 const GET_POKEMONS = gql`
   query GetPokemons($page: Int, $limit: Int, $sortBy: String, $total_len: Int) {
@@ -93,9 +94,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	const [pokeDetails, setPokeDetails] = useState<PokeDetail[]>([]);
 	const [total_len, setTotal_len] = useState(0)
 
-  console.log(pokeDetails)
-
-	// const [loading, setLoading] = useState<boolean>(true);
+// const [loading, setLoading] = useState<boolean>(true);
 	// const [loadingMore, setLoadingMore] = useState<boolean>(false);
 
 	//sorting and filtering algorithm
@@ -120,8 +119,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 	const [searchTerm, setSearchTerm] = useState('');
 	void searchTerm
 	// console.log("searchTerm: ", searchTerm)
-
-  const [suggestions, setSuggestions] = useState<PokeDetail[]>([]);
 
 	const [totalPages, setTotalPages] = useState(0);
 
@@ -168,7 +165,6 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	useEffect(() => {
 		if (data && data.pokemons) {
-			console.log('triggered')
 			setPokeDetails(data.pokemons.pokemons);
 			setTotal_len(data.pokemons.total)
 			setTotalPages(Math.ceil(data.pokemons.total / itemsPerPage));
@@ -210,7 +206,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
   //user
 	const fetchUserDetails = async (id: number) =>
 	{
-		console.log(id)
+		// console.log(id)
 		const token = localStorage.getItem('token');
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/users/${id}`, {
@@ -241,11 +237,11 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
       <div className='mt-32'>
 				<FilterBar
 					sortBy={sortBy}
+					onSortChange={handleSortChange}
 					types={pokemonTypes}
 					selectedType={selectedType}
-					setSelectedType={setSelectedType}
+					// setSelectedType={setSelectedType}
 					onTypeChange={handleTypeChange}
-					onSortChange={handleSortChange}
 					/>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
 					{[...Array(itemsPerPage)]?.map((_, index) => (
@@ -256,9 +252,14 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
     );
 	}
 
-  if (error || typeError) {
-    return <p>Error: {error?.message || typeError?.message}</p>;
-  }
+	if (error || typeError) {
+		const errorMessage =
+			error?.message === "Error message not found."
+				? "Unable to connect to the server. Please try again later."
+				: error?.message || typeError?.message || "An unknown error occurred.";
+
+		return <ErrorPage statusCode={500} message={errorMessage} />;
+	}
 
   if (!data && !typeData) {
     return <p>No data available</p>;
@@ -299,12 +300,14 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 		<div className='mt-32'>
 			<ToastContainer />
 			<FilterBar
-				sortBy={sortBy}
 				types={pokemonTypes}
 				selectedType={selectedType}
-				setSelectedType={setSelectedType}
+				// setSelectedType={setSelectedType}
 				onTypeChange={handleTypeChange}
+				sortBy={sortBy}
 				onSortChange={handleSortChange}
+
+				searchHolder="Pokémon"
 			/>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
 				{loading || typeLoading ? (

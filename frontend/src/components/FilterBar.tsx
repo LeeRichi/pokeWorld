@@ -1,54 +1,47 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { ChangeEvent } from 'react';
 import SearchBar from './SearchBar';
-import { PokeDetail } from '@/types/type_Pokemon';
 
 interface FilterBarProps
 {
+  types?: string[];
+  onTypeChange?: (selectedType: string) => void;
+  selectedType?: string;
+  // setSelectedType: (selectedType: string) => void;
+
   sortBy: string;
-  types: string[];
-  onTypeChange: (selectedType: string) => void;
-	onSortChange: (sortBy: string) => void;
-  // onSearch: (searchTerm: string) => void;
-  selectedType: string;
-  setSelectedType: (selectedType: string) => void;
-  // suggestions: PokeDetail[];
-  // setSearchTerm: (term: string) => void;
+  onSortChange: (sortBy: string) => void;
+
+  searchHolder: string
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ sortBy, types, onTypeChange, onSortChange, selectedType, setSelectedType}) => {
-  // const [selectedType, setSelectedType] = useState('');
-  // const [sortOption, setSortOption] = useState('');
-  // console.log(sortOption)
+const FilterBar: React.FC<FilterBarProps> = ({ sortBy, types, onTypeChange, onSortChange, selectedType, searchHolder}) => {
 
   const handleTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
-    setSelectedType(selectedValue);
-    onTypeChange(selectedValue);
+    // setSelectedType(selectedValue);
+    onTypeChange?.(selectedValue);
   };
 
   const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const sortValue = e.target.value;
-    console.log(sortValue)
-    // setSortOption(sortValue);
 		onSortChange(sortValue);
-		console.log(sortValue)
   };
 
   return (
     <div className="p-4 bg-white rounded-lg flex items-center space-x-4 flex-wrap justify-center">
 
-			<SearchBar />
+      <SearchBar searchHolder={searchHolder} />
 
-      <div className="mr-4 mb-4">
+      <div className={`mr-4 mb-4 ${types ? '' : 'invisible'}`}>
         <select
           id="type-filter"
           value={selectedType}
           onChange={handleTypeChange}
-          className="mt-4 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-12" // Set height to match
+          className="mt-4 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-12"
         >
           <option value="">All Types</option>
-          {types.map((type) => (
-						<option key={type} value={type}>
+          {types?.map((type) => (
+            <option key={type} value={type}>
               {type}
             </option>
           ))}
@@ -64,13 +57,22 @@ const FilterBar: React.FC<FilterBarProps> = ({ sortBy, types, onTypeChange, onSo
           value={sortBy}
           onChange={handleSortChange}
           className="block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 h-12"
-        >
-					<option value="id">ID</option>
-					<option value="reverse-id">ID descending</option>
-					<option value="name">Name</option>
-					<option value="reverse-name">Name descending</option>
-					<option value="likes">Likes</option>
-					<option value="reverse-likes">Likes descending</option>
+          >
+           {types ? (
+              <>
+                <option value="id">ID</option>
+                <option value="reverse-id">ID descending</option>
+                <option value="name">Name</option>
+                <option value="reverse-name">Name descending</option>
+                <option value="likes">Likes</option>
+                <option value="reverse-likes">Likes descending</option>
+              </>
+            ) : (
+              <>
+                <option value="id">Price</option>
+                <option value="reverse-id">Price descending</option>
+              </>
+            )}
         </select>
       </div>
     </div>

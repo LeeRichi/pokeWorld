@@ -1,5 +1,7 @@
 import { AppProps } from 'next/app';
 import { SessionProvider } from "next-auth/react";
+import { Provider } from "react-redux";
+import {store} from "@/redux/store";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './global.css';
@@ -56,32 +58,33 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 		};
 	}, [router.events]);
 
+	return (
+		<Provider store={store}>
+			<SessionProvider session={session}>
+				<Head>
+					<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+				</Head>
 
-  return (
-		<SessionProvider session={session}>
-			<Head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-      </Head>
+				<Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
+				<Script id="google-analytics" strategy="afterInteractive">
+					{`
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', '${GA_TRACKING_ID}');
+					`}
+				</Script>
 
-      <Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
-			<Script id="google-analytics" strategy="afterInteractive">
-				{`
-					window.dataLayer = window.dataLayer || [];
-					function gtag(){dataLayer.push(arguments);}
-					gtag('js', new Date());
-					gtag('config', '${GA_TRACKING_ID}');
-				`}
-			</Script>
-
-      <div className="flex flex-col min-h-screen">
-				<Header user={user} setUser={setUser} />
-        <main className="flex-grow">
-          <Component {...pageProps} user={user} setUser={setUser} />
-        </main>
-        <Footer />
-				<ToastContainer />
-			</div>
-    </SessionProvider>
+				<div className="flex flex-col min-h-screen">
+					<Header user={user} setUser={setUser} />
+					<main className="flex-grow">
+						<Component {...pageProps} user={user} setUser={setUser} />
+					</main>
+					<Footer />
+					<ToastContainer />
+				</div>
+			</SessionProvider>
+		</Provider>
   );
 }
 

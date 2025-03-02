@@ -3,16 +3,16 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 // import { useSession } from "next-auth/react";
 import { User } from '@/types/type_User';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/user/Sidebar';
 import Topbar from '@/components/Topbar';
-import EditProfileForm from '@/components/EditProfileForm';
-import FriendsList from '@/components/FriendsList';
+import EditProfileForm from '@/components/user/EditProfileForm';
+import FriendsList from '@/components/user/FriendsList';
 import { PokeDetail } from '@/types/type_Pokemon';
 import defaultAvatar from '@/assests/default_avatar.jpg'
 import Card from '@/components/Card';
 import { ToastContainer } from 'react-toastify';
 // import { motion } from 'framer-motion'
-import ChangePasswordForm from '@/components/ChangePasswordForm';
+import ChangePasswordForm from '@/components/user/ChangePasswordForm';
 
 interface UserDetailProps
 {

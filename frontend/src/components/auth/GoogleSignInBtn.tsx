@@ -4,7 +4,8 @@ import React, { useEffect } from 'react'
 import { useRouter } from 'next/router';
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
-import google_logo from "../assests/google_logo.png"
+import google_logo from "../../assests/google_logo.png"
+
 import { toast } from 'react-toastify';
 import { User } from '@/types/type_User';
 

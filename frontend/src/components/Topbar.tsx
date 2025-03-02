@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signOut, useSession } from "next-auth/react";
-import EditProfileForm from '@/components/EditProfileForm';
+import EditProfileForm from '@/components/user/EditProfileForm';
 import { User } from '@/types/type_User';
 
 interface TopbarProps {

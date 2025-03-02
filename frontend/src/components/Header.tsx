@@ -7,6 +7,8 @@ import Dropdown from './Dropdown';
 import UserSearch from './UserSearch';
 import { signOut } from "next-auth/react";
 import Link from 'next/link';
+import { LuMessageSquareText } from "react-icons/lu";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 interface HeaderProps {
   user: User | null;
@@ -50,22 +52,21 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
             >
               Pokémon
             </Link>
-            <span
-              className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-500 cursor-not-allowed relative"
+            <Link
+              href="/shoppingCenter"
+              aria-current="page"
+              className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
             >
               Shopping Center
-              <span className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-max bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                Developing
-              </span>
-            </span>
+            </Link>
           </div>
 					<div className="flex items-center justify-end gap-3 relative">
 						{/* cosider the heart and amount of likes */}
 						{/* <button><Heart isFilled={false} /></button> */}
             {user ? (
 							<div className="relative flex items-center space-x-2">
-									<UserSearch />
-									<h3 className="text-left">{user.username}</h3>
+                <UserSearch />
+                <h3 className="text-left">{user.username}</h3>
                 <button
                   onClick={toggleDropdown}
                   className="inline-flex items-center justify-center rounded-full h-10 w-10"
@@ -92,6 +93,7 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
                     Log Out
                   </button>
                 </Dropdown>
+                <LuMessageSquareText />
               </div>
             ) : (
               <>
@@ -103,6 +105,9 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
                 </Link>
               </>
             )}
+            <Link href="/cart">
+              <AiOutlineShoppingCart />
+            </Link>
           </div>
         </div>
       </div>

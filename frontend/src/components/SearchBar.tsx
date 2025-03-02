@@ -12,7 +12,7 @@ import { arch } from 'os';
   // setSearchTerm: (term: string) => void;
 // }
 
-const SearchBar: React.FC = () =>
+const SearchBar: React.FC<{ searchHolder: string }> = ({ searchHolder }) =>
   {
 	  const [pokemonNames, setPokemonNames] = useState<string[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -87,7 +87,7 @@ const SearchBar: React.FC = () =>
     <div className="relative border">
       <input
         type="text"
-        placeholder="Search Pokémon..."
+        placeholder={`Search ${searchHolder}...`}
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}
 				// onBlur={handleBlur}
