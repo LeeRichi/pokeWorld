@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import pokeBall from '../assests/logo.png';
+import pokeBall from '../assests/logo_no_bg.png';
 import defaultAvatar from '../assests/default_avatar.jpg'
 import { User } from '@/types/type_User';
 import Dropdown from './Dropdown';
@@ -8,7 +8,7 @@ import UserSearch from './UserSearch';
 import { signOut } from "next-auth/react";
 import Link from 'next/link';
 import { LuMessageSquareText } from "react-icons/lu";
-import { AiOutlineShoppingCart } from "react-icons/ai";
+import CartIcon from './cartIcon';
 
 interface HeaderProps {
   user: User | null;
@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
         <div className="flex items-center justify-between">
           <div className="flex shrink-0">
             <Link href="/" aria-current="page" className="flex items-center w-10">
-              <Image src={pokeBall.src} alt="Poke Ball" width={40} height={40} />
+              <Image src={pokeBall.src} alt="Poke Ball" width={40} height={40} priority/>
               <p className="sr-only">Website Title</p>
             </Link>
           </div>
@@ -72,11 +72,12 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
                   className="inline-flex items-center justify-center rounded-full h-10 w-10"
                 >
                   <Image
-                    src={user?.image || defaultAvatar}
+                    src={user?.image ? user.image : defaultAvatar}
                     alt="User Avatar"
                     width={38}
                     height={38}
                     className="h-8 w-8 rounded-full mt-1"
+                    priority
                   />
                 </button>
 								 <Dropdown isOpen={dropdownVisible} onClose={() => setDropdownVisible(false)}>
@@ -105,9 +106,9 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
                 </Link>
               </>
             )}
-            <Link href="/cart">
-              <AiOutlineShoppingCart />
-            </Link>
+            {/* <Link href="/cart" className='relative'> */}
+              <CartIcon />
+            {/* </Link> */}
           </div>
         </div>
       </div>

@@ -1,3 +1,56 @@
+# version: '3.8'
+
+# networks:
+#   mynetwork:
+
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - '3006:3006'
+#     depends_on:
+#       - db
+#     environment:
+#       - DB_HOST=db
+#       - DB_USER=${DB_USER}
+#       - DB_PASSWORD=${DB_PASSWORD}
+#       - DB_NAME=${DB_NAME}
+#       - BACKEND_PORT=${BACKEND_PORT}
+#       - JWT_SECRET=${JWT_SECRET}
+#     volumes:
+#       - .:/usr/src/app
+#     command: npm run dev
+#     networks:
+#       - mynetwork
+
+#   db:
+#     image: postgres:14
+#     environment:
+#       POSTGRES_USER: ${DB_USER}
+#       POSTGRES_PASSWORD: ${DB_PASSWORD}
+#       POSTGRES_DB: ${DB_NAME}
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+#       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#     ports:
+#       - '5433:5432'
+#     networks:
+#       - mynetwork
+
+#   # adminer:
+#   #   image: adminer
+#   #   restart: always
+#   #   ports:
+#   #     - '8080:8080'
+#   #   networks:
+#   #     - mynetwork
+
+# volumes:
+#   pgdata:
+
+
 version: '3.8'
 
 networks:
@@ -9,7 +62,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3006:3006'
+      - '3006:3006'  # Keeping your existing port mapping for frontend or other services
     depends_on:
       - db
     environment:
@@ -35,15 +88,26 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - '5433:5432'
+      - '5433:5432'  # Exposing 5432 in the container on port 5433
     networks:
       - mynetwork
 
-  adminer:
-    image: adminer
-    restart: always
+  java-app:
+    build:
+      context: ./src/cart-api
+      dockerfile: Dockerfile  # Assuming you have a Dockerfile in the same directory
     ports:
-      - '8080:8080'
+      - "8081:8081"  # Exposing port 8081 for your Java app
+    environment:
+      - DB_HOST=db  # Database host is the db service name
+      - DB_USER=${DB_USER}  # These environment variables should be defined
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5433/pokemon_db
+      - SPRING_DATASOURCE_USERNAME=youruser
+      - SPRING_DATASOURCE_PASSWORD=yourpassword
+    depends_on:
+      - db  # Waits for the db service to be available before starting
     networks:
       - mynetwork
 

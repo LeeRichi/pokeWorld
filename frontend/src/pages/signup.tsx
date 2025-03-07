@@ -1,5 +1,5 @@
 import React from 'react'
-import SignUp from '@/components/SignUp';
+import SignUp from '../components/auth/SignUp';
 import { User } from '@/types/type_User';
 
 interface SignUpProps

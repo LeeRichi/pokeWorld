@@ -68,8 +68,7 @@ docker-compose up --build
 ```
 - This will:
 	- Build the Node.js application and start it on port 3006.
-	- Start a PostgreSQL database on port 5433.
-	- Set up Adminer for database management on port 8080.
+	- Start a PostgreSQL database on port 5432.
 
 ### 4. Access the Application
 

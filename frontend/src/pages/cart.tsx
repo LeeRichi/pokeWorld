@@ -1,19 +1,103 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../redux/cartSlice";
+import { addToCart, removeFromCart } from "../redux/cartSlice";
 import { RootState } from "../redux/store";
 import Image from 'next/image';
 import { BsFillTrashFill } from "react-icons/bs";
+import { User } from '@/types/type_User';
+import { CartItem } from '@/types/type_Cart';
 
-const Cart = () => {
+interface CartProps {
+  user: User | null;
+  setUser: (user: User | null) => void;
+}
+
+const Cart: React.FC<CartProps> = ({ user, setUser }) =>
+{
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
+  const [hydrated, setHydrated] = useState(false);
+
+  console.log(user?.user_id)
+
+  useEffect(() => {
+    setHydrated(true);
+    if (user) {
+      // Fetch cart data for the logged-in user
+
+      const fetchCart = async () => {
+        try {
+          const response = await fetch(`http://localhost:8081/myapp/cart/${user.user_id}`)
+          if (response.ok) {
+            const cartData = await response.json();
+
+            console.log(cartData)
+
+            const formattedItems = Object.keys(cartData.items).map(key => ({
+              id: Number(key),
+              quantity: cartData.items[key]
+            }));
+
+            console.log(formattedItems)
+
+            //localstorage
+            const localStorageCart = localStorage.getItem('cart');
+
+            let combinedData;
+            if (localStorageCart) {
+              const parsedLocalStorageCart = JSON.parse(localStorageCart);
+              const id_quantity_pair = parsedLocalStorageCart.map((item: CartItem) => ({
+                id: item.id,
+                quantity: item.quantity
+              }));
+
+              console.log(id_quantity_pair)
+
+              const allItems = [...formattedItems, ...id_quantity_pair];
+
+              console.log(allItems);
+
+              const combinedMap = allItems.reduce((acc, item) => {
+                if (acc.has(item.id)) {
+                  acc.get(item.id).quantity += item.quantity;
+                } else {
+                  acc.set(item.id, { ...item });
+                }
+                return acc;
+              }, new Map());
+              combinedData = Array.from(combinedMap.values());
+
+              console.log(combinedData)
+            } else {
+              combinedData = formattedItems;
+            }
+            console.log(combinedData)
+            // Dispatch cart data to the store or set state as needed
+            // For example: dispatch(setCart(cartData));
+          } else {
+            console.error("Failed to fetch cart");
+          }
+        } catch (error) {
+          console.error("Error fetching cart data:", error);
+        }
+      };
+
+      fetchCart();
+    }
+  }, [user]);
 
   const handleRemoveFromCart = (itemId: number) => {
     dispatch(removeFromCart(itemId));
   };
 
-  const totalPrice = cart.reduce((total, item) => total + item.cost * item.quantity, 0);
+  const itemsFee = cart.reduce((total, item) => total + item.cost * item.quantity, 0);
+  const deliveryFee = itemsFee < 50 && itemsFee !== 0 ? 10 : 0;
+  const totalPrice = itemsFee + deliveryFee;
+
+  if (!hydrated) {
+    return null; // Prevent rendering on the server
+  }
+
 
   return (
     <div className="flex mt-32 mx-12 flex-col sm:flex-row">
@@ -63,17 +147,15 @@ const Cart = () => {
           </div>
         )}
       </div>
-			<div className="w-full sm:w-1/4 h-[40vh] p-4 bg-slate-200 sm:ml-4 mt-4 sm:mt-0 border flex flex-col">
+			<div className="w-full sm:w-1/4 h-[40vh] p-4 bg-slate-200 sm:ml-4 mt-4 sm:mt-0 mb-4 border flex flex-col">
 				<h2 className="text-2xl font-semibold mb-4">Checkout</h2>
 				<div className="flex justify-between items-center">
           <span className="text-gray-600">Items Fee:</span>
-            {/* <span>${itemsFee}</span> */}
-          <span>1</span>
+          <span>${itemsFee}</span>
 				</div>
 				<div className="flex justify-between items-center">
           <span className="text-gray-600">Delivery Fee:</span>
-            {/* <span>${deliveryFee}</span> */}
-            <span>1</span>
+          <span>${deliveryFee}</span>
         </div>
         <hr className="border-t-1 border-gray-700 mt-10" />
         <div className="text-gray-600 text-lg flex justify-between items-center mt-auto">
