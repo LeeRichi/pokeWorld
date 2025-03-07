@@ -1,11 +1,11 @@
-import { PokeDetail } from '@/types/type_Pokemon';
+// import { PokeDetail } from '@/types/type_Pokemon';
 import React, { ChangeEvent, KeyboardEvent, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+// import Image from 'next/image';
 import debounce from 'lodash/debounce';
-import Link from 'next/link';
+// import Link from 'next/link';
 import axios from 'axios';
-import { arch } from 'os';
+// import { arch } from 'os';
 
 // interface SearchBarProps {
   // onSearch: (searchTerm: string) => void;

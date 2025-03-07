@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 interface ErrorPageProps {
   statusCode: number;
@@ -22,9 +23,9 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ statusCode, message }) => {
       </div>
       <div className="flex flex-col items-center justify-center text-center relative z-10 mt-96">
         <p className="text-xl text-gray-800 mb-4">{message}</p>
-        <a href="/" className="text-lg text-blue-500 hover:underline">
+        <Link href="/" className="text-lg text-blue-500 hover:underline">
           Go back to home
-        </a>
+        </Link>
       </div>
     </div>
   );

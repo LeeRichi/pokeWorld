@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 import Filterbar from "../components/FilterBar";
 import { User } from "../types/type_User";
 import Image from 'next/image';
@@ -7,11 +7,13 @@ import { PiCoinVerticalBold } from "react-icons/pi";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/cartSlice";
+void removeFromCart
 import { RootState } from "../redux/store";
 import PaginationBtn from "@/components/PaginationBtn";
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import { remove } from "lodash";
 
 interface ItemSimple {
   name: string;
@@ -31,9 +33,9 @@ interface ItemDetail {
   descriptionEntry: string;
 }
 
-interface CartItem extends ItemDetail {
-  quantity: number;
-}
+// interface CartItem extends ItemDetail {
+//   quantity: number;
+// }
 
 interface ShoppingPageProps {
   user: User | null;
@@ -45,7 +47,10 @@ const fetchItems = async (): Promise<ItemRaw> => {
   return response.json();
 };
 
-const ShoppingPage: React.FC<ShoppingPageProps> = ({ user, setUser }) => {
+const ShoppingPage: React.FC<ShoppingPageProps> = ({ user, setUser }) =>
+{
+  void user
+  void setUser
   const [items, setItems] = useState<ItemDetail[]>([]);
   const itemsPerPage = 20;
   const [sortBy, setSortBy] = useState('id');

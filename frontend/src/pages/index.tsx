@@ -1,6 +1,6 @@
 import React from 'react';
 import Main from '../components/Main';
-import ShoppingPage from './shoppingCenter'
+// import ShoppingPage from './shoppingCenter'
 import { User } from '@/types/type_User';
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 

@@ -16,7 +16,7 @@ interface CardProps
 
 // Use forwardRef to pass ref correctly
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ pokemon, emoji, hueA, hueB, i }, ref) => {
+  ({ pokemon, i }, ref) => {
     const typeColors: Record<string, string> = {
       fire: "#fba56f",
       water: "#63a5fc",

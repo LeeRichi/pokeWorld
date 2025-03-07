@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/cartSlice";
+void addToCart
 import { RootState } from "../redux/store";
 import Image from 'next/image';
 import { BsFillTrashFill } from "react-icons/bs";
@@ -14,6 +15,7 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 {
+  void setUser
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
   const [hydrated, setHydrated] = useState(false);

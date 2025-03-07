@@ -117,6 +117,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	// Search state
 	const [searchTerm, setSearchTerm] = useState('');
+	void setSearchTerm
 	void searchTerm
 	// console.log("searchTerm: ", searchTerm)
 
@@ -242,6 +243,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 					selectedType={selectedType}
 					// setSelectedType={setSelectedType}
 					onTypeChange={handleTypeChange}
+					searchHolder=''
 					/>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
 					{[...Array(itemsPerPage)]?.map((_, index) => (
