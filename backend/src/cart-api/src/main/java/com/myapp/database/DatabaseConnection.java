@@ -14,7 +14,7 @@ public class DatabaseConnection {
     // Get a database connection (singleton pattern)
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            String url = "jdbc:postgresql://localhost:5432/pokemon_db";
+            String url = "jdbc:postgresql://db:5433/pokemon_db";
             String user = "youruser";
             String password = "yourpassword";
             connection = DriverManager.getConnection(url, user, password);

@@ -132,7 +132,7 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 									<input
 										type="number"
 										value={item.quantity}
-										onChange={(e) => dispatch(updateQuantity({ id: item.id, quantity: parseInt(e.target.value) }))}
+										// onChange={(e) => dispatch(updateQuantity({ id: item.id, quantity: parseInt(e.target.value) }))}
 										className="w-12 p-1 border rounded text-center"
 										min="1"
 									/>

@@ -19,7 +19,8 @@ const SearchBar: React.FC<{ searchHolder: string }> = ({ searchHolder }) =>
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
 
     const fetchPokemonNames = async () => {
-      try {
+			try {
+				console.log(process.env.NEXT_PUBLIC_MY_BACKEND_API_URL)
         const response = await axios.get(`${process.env.NEXT_PUBLIC_MY_BACKEND_API_URL}/api/pokemons_names`);
         return response.data;
       } catch (error) {
