@@ -6,3 +6,9 @@ export interface CartItem {
   descriptionEntry: string;
   quantity: number;
 }
+
+export interface PairStates
+{
+  id: number;
+  quantity: number;
+}

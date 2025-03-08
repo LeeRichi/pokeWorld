@@ -25,7 +25,7 @@ interface ItemRaw {
   results: ItemSimple[];
 }
 
-interface ItemDetail {
+export interface ItemDetail {
   id: number;
   name: string;
   image: string | null;
@@ -52,6 +52,7 @@ const ShoppingPage: React.FC<ShoppingPageProps> = ({ user, setUser }) =>
   void user
   void setUser
   const [items, setItems] = useState<ItemDetail[]>([]);
+  console.log(items)
   const itemsPerPage = 20;
   const [sortBy, setSortBy] = useState('id');
 
@@ -61,6 +62,8 @@ const ShoppingPage: React.FC<ShoppingPageProps> = ({ user, setUser }) =>
 	const [restLoading, setRestLoading] = useState(true);
 
   const [totalPages, setTotalPages] = useState(0);
+
+  console.log(totalPages)
 
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
@@ -91,7 +94,7 @@ const ShoppingPage: React.FC<ShoppingPageProps> = ({ user, setUser }) =>
         })
       );
       setItems(itemsWithDetails);
-      setTotalPages(Math.ceil(items.length / 20))
+      setTotalPages(Math.ceil(itemsWithDetails.length / itemsPerPage))
       setRestLoading(false)
     };
     loadItems();

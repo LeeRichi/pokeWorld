@@ -9,7 +9,7 @@ import SkeletonCard from './SkeletonCard';
 import {User} from '@/types/type_User';
 import { useRouter } from 'next/router';
 // import { CgPokemon } from 'react-icons/cg';
-import { ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
@@ -300,7 +300,7 @@ const Main: React.FC<MainProps> = ({ user, setUser }) =>
 
 	return (
 		<div className='mt-32'>
-			<ToastContainer />
+			{/* <ToastContainer /> */}
 			<FilterBar
 				types={pokemonTypes}
 				selectedType={selectedType}
