@@ -21,7 +21,9 @@ WORKDIR /app
 
 # Copy only the built JAR from the first stage
 # COPY --from=builder /app/build/libs/cart-api-*.jar /app/cart-api.jar
-COPY --from=builder /app/build/libs/cart-api-*.jar /app/
+# COPY --from=builder /app/build/libs/cart-api-*.jar /app/cart-api.jar
+
+COPY --from=builder /app/build/libs/*.jar /app/cart-api.jar
 
 # Expose the application port
 EXPOSE 8081
