@@ -18,10 +18,45 @@ const GA_TRACKING_ID = "G-XVTMR61Y98"; //safe in public
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 {
 	const [user, setUser] = useState<User | null>(null);
+	const [cartLen, setCartLen] = useState<number>(0);
+	console.log(cartLen)
+
+	// const cart = useSelector((state: RootState) => state.cart.items);
+	// console.log(cart.length)
+
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
 
 	const router = useRouter();
 
 	console.log(user)
+
+	useEffect(() => {
+    const fetchCartAmount = async () => {
+      if (!user?.user_id) return;
+      try {
+        const response = await fetch(`http://localhost:8081/myapp/cart/${user.user_id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch cart data');
+        }
+
+				const cartData = await response.json();
+
+				const items = cartData.items as Record<string, number>;
+
+        const sum = Object.values(items).reduce((acc, curr) => acc + curr, 0);
+
+				console.log(sum)
+        setCartLen(sum);
+      } catch (err: unknown) {
+				setError((err as Error).message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCartAmount();
+  }, [user]);
 
 	const checkTokenExpiration = () => {
     const token = localStorage.getItem('token');
@@ -76,7 +111,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 				</Script>
 
 				<div className="flex flex-col min-h-screen">
-					<Header user={user} setUser={setUser} />
+					<Header user={user} setUser={setUser} cartLen={cartLen} />
 					<main className="flex-grow">
 						<Component {...pageProps} user={user} setUser={setUser} />
 					</main>

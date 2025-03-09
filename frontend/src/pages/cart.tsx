@@ -29,6 +29,7 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 
   console.log(user?.user_id)
 
+  //api call
   const addItemsToCartApi = async (user_id: number, item_id: number, quantity: number) =>
   {
     try {
@@ -57,12 +58,10 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 
             const existingItemsMap = new Map(formattedItems.map(item => [item.id, item]));
 
-            console.log('old: ', existingItemsMap)
-
             // Filter out items that already exist in `formattedItems`
-            const newItems = cart.filter(item => !existingItemsMap.has(item.id)); //this is from state
+            // const newItems = cart.filter(item => !existingItemsMap.has(item.id)); //this is from state
 
-            console.log(newItems)
+            // console.log(newItems)
 
             cart.forEach(item =>
             {
@@ -88,17 +87,14 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
               }
             });
 
-
-            console.log("new: ", existingItemsMap)
             // Merge updated data
+
             //old
             // const combinedData = [...formattedItems, ...newItems];
             const combinedData = [...Array.from(existingItemsMap.values())];
-            console.log(combinedData)
 
             //compare combine data to existingItemsMap??? even the same item but different amount
             //post to match combinedData
-
 
             const fetchItemData = async () => {
               try {

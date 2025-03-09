@@ -12,10 +12,11 @@ import CartIcon from './cartIcon';
 
 interface HeaderProps {
   user: User | null;
-	setUser: (user: User | null) => void;
+  setUser: (user: User | null) => void;
+  cartLen: number;
 }
 
-const Header: React.FC<HeaderProps> = ({user, setUser}) => {
+const Header: React.FC<HeaderProps> = ({user, setUser, cartLen}) => {
 	const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
@@ -107,7 +108,7 @@ const Header: React.FC<HeaderProps> = ({user, setUser}) => {
               </>
             )}
             {/* <Link href="/cart" className='relative'> */}
-              <CartIcon />
+            <CartIcon cartLen={cartLen} />
             {/* </Link> */}
           </div>
         </div>

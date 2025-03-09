@@ -4,14 +4,16 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { useEffect, useState, useMemo } from 'react';
 
-const CartIcon = () => {
+type CartIconProps = {
+  cartLen: number;
+};
+
+const CartIcon: React.FC<CartIconProps> = ({ cartLen }) =>
+{
   const cart = useSelector((state: RootState) => state.cart.items);
 
-  console.log(typeof(cart))
-  console.log(cart)
-
   // Use Object.values(cart) to convert the object into an array if cart is an object
-  const totalItems = useMemo(() => {
+  const totalItems: number = useMemo(() => {
     if (Array.isArray(cart)) {
       return cart.reduce((total, item) => total + item.quantity, 0);
     } else {
@@ -21,7 +23,9 @@ const CartIcon = () => {
     }
   }, [cart]);
 
-  const cappedTotalItems = totalItems > 99 ? 99 : totalItems;
+  const cappedTotalItems: number = totalItems > 99 ? 99 : totalItems;
+
+  console.log(cappedTotalItems)
 
   const [hydrated, setHydrated] = useState(false);
 
@@ -32,9 +36,9 @@ const CartIcon = () => {
   return (
     <Link href="/cart" className="relative">
       <AiOutlineShoppingCart className="text-2xl" />
-      {hydrated && totalItems > 0 && (
+      {hydrated && cartLen > 0 && (
         <span className="absolute -top-2 -right-2 bg-red-400 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-          {cappedTotalItems}
+          {cappedTotalItems === 0 ? cartLen : cappedTotalItems}
         </span>
       )}
     </Link>

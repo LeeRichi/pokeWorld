@@ -133,7 +133,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ user, setUser }) =>
           </div>
 
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Favorites Pokémon</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {user?.favorites? (
 							user?.favorites?.map((pokemon: PokeDetail) => (
 								<Card key={pokemon.name} pokemon={pokemon} userPageMode={true} user={user} isFavorite={false} />
