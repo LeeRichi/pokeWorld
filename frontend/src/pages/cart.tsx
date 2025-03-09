@@ -6,7 +6,7 @@ import { RootState } from "../redux/store";
 import Image from 'next/image';
 import { BsFillTrashFill } from "react-icons/bs";
 import { User } from '@/types/type_User';
-import { CartItem, PairStates} from '@/types/type_Cart';
+import { CartItem, PairStates } from '@/types/type_Cart';
 
 interface CartProps {
   user: User | null;
@@ -21,11 +21,15 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 
   console.log(cart)
 
+  // const [localState, setLocalState] = useState<PairStates[]>([])
+
+  // console.log(localState)
+
   const [hydrated, setHydrated] = useState(false);
 
   console.log(user?.user_id)
 
-  const addItemsToCart = async (user_id: number, item_id: number, quantity: number) =>
+  const addItemsToCartApi = async (user_id: number, item_id: number, quantity: number) =>
   {
     try {
       fetch(`http://localhost:8081/myapp/cart/${user_id}/add?itemId=${item_id}&quantity=${quantity}`, {
@@ -46,49 +50,55 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
           if (response.ok) {
             const cartData = await response.json();
 
-            const formattedItems = Object.keys(cartData.items).map(key => ({
+            const formattedItems = Object.keys(cartData.items).map(key => ({ //this is from database
               id: Number(key),
               quantity: cartData.items[key]
             }));
 
-            // Retrieve local storage cart
-            const localStorageCart = localStorage.getItem('cart');
-            const newItems: PairStates[] = [];
-            if (localStorageCart) {
-              const parsedLocalStorageCart = JSON.parse(localStorageCart); //everything
+            const existingItemsMap = new Map(formattedItems.map(item => [item.id, item]));
 
-              const exisitingItems: CartItem[] = [...formattedItems]; // Copy database items
+            console.log('old: ', existingItemsMap)
 
-              const newItems: CartItem[] = [];
+            // Filter out items that already exist in `formattedItems`
+            const newItems = cart.filter(item => !existingItemsMap.has(item.id)); //this is from state
 
-              parsedLocalStorageCart.forEach((localItem: CartItem) => {
-                const existingItem = exisitingItems.find(dbItem => dbItem.id === localItem.id);
-                if (existingItem) {
-                  // If item exists in database, increase quantity
-                  existingItem.quantity += localItem.quantity;
-                } else {
-                  // If item doesn't exist in database, mark as new
-                  newItems.push(localItem);
-                  exisitingItems.push(localItem);
-                }
-              });
+            console.log(newItems)
 
-              // Send only new items to the backend
-              for (const item of newItems) {
-                await addItemsToCart(user.user_id, item.id, item.quantity);
+            cart.forEach(item =>
+            {
+              console.log(item.id)
+              console.log(existingItemsMap)
+              if (existingItemsMap.has(item.id)) {
+                console.log('yes')
+                // If the item already exists, update the quantity
+                const prevQuantity = existingItemsMap.get(item.id).quantity;
+                const quantityDifference = item.quantity - prevQuantity;
+
+                console.log(quantityDifference)
+
+                // Update the quantity in the map
+                existingItemsMap.get(item.id).quantity = item.quantity;
+
+                // Send the quantity difference to the API
+                addItemsToCartApi(user.user_id, item.id, quantityDifference);
+              } else {
+                // If the item doesn't exist, add it to the map
+                existingItemsMap.set(item.id, item);
+                addItemsToCartApi(user.user_id, item.id, item.quantity);
               }
-
-              // Update the frontend cart state
-              dispatch(setCart(exisitingItems));
-
-              // Clear local storage cart after syncing
-              localStorage.removeItem('cart');
-            }
+            });
 
 
-
+            console.log("new: ", existingItemsMap)
             // Merge updated data
-            const combinedData = [...formattedItems, ...newItems];
+            //old
+            // const combinedData = [...formattedItems, ...newItems];
+            const combinedData = [...Array.from(existingItemsMap.values())];
+            console.log(combinedData)
+
+            //compare combine data to existingItemsMap??? even the same item but different amount
+            //post to match combinedData
+
 
             const fetchItemData = async () => {
               try {
@@ -112,9 +122,9 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
                   };
                 });
 
+                dispatch(resetCart())
                 dispatch(setCart(updatedData as CartItem[]));
 
-                // Clear local storage after syncing
                 localStorage.removeItem('cart');
               } catch (error) {
                 console.error('Error fetching item data:', error);
@@ -132,96 +142,6 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
       fetchCart();
     }
   }, [user]);
-
-
-  // useEffect(() =>
-  // {
-  //   setHydrated(true);
-  //   if (user) {
-  //     const fetchCart = async () =>
-  //     {
-  //       try {
-  //         const response = await fetch(`http://localhost:8081/myapp/cart/${user.user_id}`)
-  //         if (response.ok) {
-  //           const cartData = await response.json();
-
-  //           const formattedItems = Object.keys(cartData.items).map(key => ({
-  //             id: Number(key),
-  //             quantity: cartData.items[key]
-  //           }));
-
-  //           //localstorage
-  //           const localStorageCart = localStorage.getItem('cart');
-
-  //           let combinedData: PairStates[];
-  //           if (localStorageCart) {
-  //             const parsedLocalStorageCart = JSON.parse(localStorageCart);
-
-  //             console.log(parsedLocalStorageCart)
-  //             const id_quantity_pair = parsedLocalStorageCart.map((item: CartItem) =>
-  //             {
-  //               console.log(user.user_id, item.id, item.quantity)
-  //               addItemsToCart(user.user_id, item.id, item.quantity)
-  //               return {
-  //                 id: item.id,
-  //                 quantity: item.quantity
-  //               }
-  //             })
-  //             const allItems = [...formattedItems, ...id_quantity_pair];
-
-  //             const combinedMap = allItems.reduce((acc, item) => {
-  //               if (acc.has(item.id)) {
-  //                 acc.get(item.id).quantity += item.quantity;
-  //               } else {
-  //                 acc.set(item.id, { ...item });
-  //               }
-  //               return acc;
-  //             }, new Map());
-  //             combinedData = Array.from(combinedMap.values());
-  //           } else {
-  //             combinedData = formattedItems;
-  //           }
-
-  //           const fetchItemData = async () => {
-  //             try {
-  //               const fetchPromises = combinedData.map(each =>
-  //                 fetch(`https://pokeapi.co/api/v2/item/${each.id}`).then(res => res.json())
-  //               );
-  //               const itemsData = await Promise.all(fetchPromises);
-
-  //               const updatedData = combinedData.map((item: PairStates, index: number) => {
-  //                 const itemData = itemsData[index]; // Assuming itemsData contains the additional CartItem properties
-  //                 const descriptionEntry = itemData.flavor_text_entries.find(
-  //                   (entry: { language: { name: string } }) => entry.language.name === "en"
-  //                 );
-
-  //                 return {
-  //                   ...item, //(id, quantity)
-  //                   name: itemData.name,
-  //                   image: itemData.sprites ? itemData.sprites.default : null,
-  //                   cost: itemData.cost,
-  //                   descriptionEntry: descriptionEntry ? descriptionEntry.text : "No description available."
-  //                 };
-  //               });
-  //               dispatch(setCart(updatedData as CartItem[]));
-
-  //               localStorage.removeItem('cart');
-  //             } catch (error) {
-  //               console.error('Error fetching item data:', error);
-  //             }
-  //           };
-  //           fetchItemData();
-  //         } else {
-  //           console.error("Failed to fetch cart");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching cart data:", error);
-  //       }
-  //     };
-
-  //     fetchCart();
-  //   }
-  // }, [user]);
 
   const handleRemoveFromCart = async (itemId: number) =>
   {

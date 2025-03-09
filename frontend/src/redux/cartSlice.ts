@@ -31,8 +31,7 @@ const cartSlice = createSlice({
       } else {
         state.items.push(action.payload);
       }
-      // localStorage.setItem("cart", JSON.stringify(action.payload));
-      localStorage.setItem("cart", JSON.stringify(state.items));
+      // localStorage.setItem("cart", JSON.stringify(state.items));
     },
 
     removeFromCart: (state, action: PayloadAction<number>) => {
@@ -63,6 +62,7 @@ const cartSlice = createSlice({
     resetCart: (state) => {
       state.items = []; // Reset state.items instead of returning a new object
       localStorage.removeItem("cart");
+      console.log(JSON.stringify(state.items));
     },
   },
 });
