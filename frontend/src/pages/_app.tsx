@@ -8,6 +8,7 @@ import './global.css';
 import { User } from '@/types/type_User';
 import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/router';
 import Script from 'next/script';
