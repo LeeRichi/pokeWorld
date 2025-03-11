@@ -12,7 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import Head from 'next/head';
-import Card from '@/components/Card';
+// import Card from '@/components/Card';
 
 const GA_TRACKING_ID = "G-XVTMR61Y98"; //safe in public
 
@@ -22,7 +22,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 	const [cartLen, setCartLen] = useState<number>(0);
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	void isLoading
 	const [error, setError] = useState<string | null>(null);
+	void error
 
 	const router = useRouter();
 

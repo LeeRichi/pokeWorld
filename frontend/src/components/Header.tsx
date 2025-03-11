@@ -11,9 +11,8 @@ import { LuMessageSquareText } from "react-icons/lu";
 import CartIcon from './cartIcon';
 import { resetCart } from '@/redux/cartSlice';
 import { useDispatch } from 'react-redux';
-import { setCart } from '@/redux/cartSlice';
-import { parse } from 'path';
-import useCart from '@/hooks/useCart';
+// import { setCart } from '@/redux/cartSlice';
+// import useCart from '@/hooks/useCart';
 
 interface HeaderProps {
   user: User | null;
@@ -21,7 +20,9 @@ interface HeaderProps {
   cartLen: number;
 }
 
-const Header: React.FC<HeaderProps> = ({user, setUser, cartLen}) => {
+const Header: React.FC<HeaderProps> = ({ user, setUser, cartLen }) =>
+{
+  void cartLen
 	const [dropdownVisible, setDropdownVisible] = useState(false);
   const dispatch = useDispatch()
   const [parsedCart, setParsedCart] = useState<{ [key: string]: number } | null>(null)
@@ -37,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({user, setUser, cartLen}) => {
   useEffect(() => {
     const cartFromLS = localStorage.getItem('cart')
     console.log(cartFromLS)
-    
+
     const temp = cartFromLS ? JSON.parse(cartFromLS) : []
     setParsedCart(temp?.items)
     console.log(parsedCart)
