@@ -30,7 +30,7 @@ const useCart = (user: User | null) => {
 
             cart.forEach(item => {
               if (existingItemsMap.has(item.id)) {
-                const prevQuantity = existingItemsMap.get(item.id)?.quantity ?? 0;
+                // const prevQuantity = existingItemsMap.get(item.id)?.quantity ?? 0;
                 // const quantityDifference = item.quantity - prevQuantity;
                 existingItemsMap.get(item.id)!.quantity = item.quantity;
               } else {

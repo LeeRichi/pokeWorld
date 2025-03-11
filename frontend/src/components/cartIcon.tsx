@@ -3,6 +3,7 @@ import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { useEffect, useState, useMemo } from 'react';
+import { CartItem } from '@/types/type_Cart';
 
 type CartIconProps = {
   cartLen: number;
@@ -19,14 +20,14 @@ const CartIcon: React.FC<CartIconProps> = ({ cartLen }) =>
     } else {
       // If cart is an object, convert it to an array
       const cartArray = Object.values(cart);
-      return cartArray.reduce((total, item) => total + item.quantity, 0);
+      return cartArray.reduce((total: number, item) => total + (item as CartItem).quantity, 0);
     }
   }, [cart]);
 
   console.log(totalItems)
   console.log(cartLen)
 
-  const cappedTotalItems: number = totalItems > 99 ? 99 : totalItems;
+  const cappedTotalItems: number = (totalItems as number) > 99 ? 99 : totalItems;
 
   console.log(cappedTotalItems)
 
