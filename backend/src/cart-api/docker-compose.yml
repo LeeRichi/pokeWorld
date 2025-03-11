@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  cart-api:
+    build: .
+    ports:
+      - "8081:8081"
+    # This ensures that Docker will automatically run the application
+    command: ["java", "-jar", "cart-api.jar"]
