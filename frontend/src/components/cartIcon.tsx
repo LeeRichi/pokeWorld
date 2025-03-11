@@ -23,6 +23,9 @@ const CartIcon: React.FC<CartIconProps> = ({ cartLen }) =>
     }
   }, [cart]);
 
+  console.log(totalItems)
+  console.log(cartLen)
+
   const cappedTotalItems: number = totalItems > 99 ? 99 : totalItems;
 
   console.log(cappedTotalItems)
@@ -36,7 +39,7 @@ const CartIcon: React.FC<CartIconProps> = ({ cartLen }) =>
   return (
     <Link href="/cart" className="relative">
       <AiOutlineShoppingCart className="text-2xl" />
-      {hydrated && cartLen > 0 && (
+      {hydrated && (cartLen > 0 || cappedTotalItems > 0) && (
         <span className="absolute -top-2 -right-2 bg-red-400 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
           {cappedTotalItems === 0 ? cartLen : cappedTotalItems}
         </span>

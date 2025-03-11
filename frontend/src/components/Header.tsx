@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import pokeBall from '../assests/logo_no_bg.png';
 import defaultAvatar from '../assests/default_avatar.jpg'
@@ -9,6 +9,11 @@ import { signOut } from "next-auth/react";
 import Link from 'next/link';
 import { LuMessageSquareText } from "react-icons/lu";
 import CartIcon from './cartIcon';
+import { resetCart } from '@/redux/cartSlice';
+import { useDispatch } from 'react-redux';
+import { setCart } from '@/redux/cartSlice';
+import { parse } from 'path';
+import useCart from '@/hooks/useCart';
 
 interface HeaderProps {
   user: User | null;
@@ -18,6 +23,25 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({user, setUser, cartLen}) => {
 	const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dispatch = useDispatch()
+  const [parsedCart, setParsedCart] = useState<{ [key: string]: number } | null>(null)
+  console.log(parsedCart)
+
+  const totalQuantity: number = parsedCart ?
+    Object.values(parsedCart).reduce((sum, quantity) => sum + quantity, 0) : 0;
+
+  console.log(totalQuantity); // Output: 14 (or 0 if parsedCart is null or undefined)
+
+  // const { hydrated, cart } = useCart(user); //infinite loop
+
+  useEffect(() => {
+    const cartFromLS = localStorage.getItem('cart')
+    console.log(cartFromLS)
+    
+    const temp = cartFromLS ? JSON.parse(cartFromLS) : []
+    setParsedCart(temp?.items)
+    console.log(parsedCart)
+  }, [])
 
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
@@ -30,7 +54,8 @@ const Header: React.FC<HeaderProps> = ({user, setUser, cartLen}) => {
     localStorage.removeItem('user');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
-
+    dispatch(resetCart())
+    localStorage.removeItem('cart')
 		setDropdownVisible(false);
 		signOut({ callbackUrl: '/login' });
 	};
@@ -108,7 +133,7 @@ const Header: React.FC<HeaderProps> = ({user, setUser, cartLen}) => {
               </>
             )}
             {/* <Link href="/cart" className='relative'> */}
-            <CartIcon cartLen={cartLen} />
+            <CartIcon cartLen={totalQuantity} />
             {/* </Link> */}
           </div>
         </div>

@@ -15,15 +15,11 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 {
-  void setUser
+  void setUser //might not need
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
 
   console.log(cart)
-
-  // const [localState, setLocalState] = useState<PairStates[]>([])
-
-  // console.log(localState)
 
   const [hydrated, setHydrated] = useState(false);
 
@@ -58,25 +54,19 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
 
             const existingItemsMap = new Map(formattedItems.map(item => [item.id, item]));
 
-            // Filter out items that already exist in `formattedItems`
-            // const newItems = cart.filter(item => !existingItemsMap.has(item.id)); //this is from state
-
-            // console.log(newItems)
-
             cart.forEach(item =>
             {
               console.log(item.id)
               console.log(existingItemsMap)
               if (existingItemsMap.has(item.id)) {
-                console.log('yes')
                 // If the item already exists, update the quantity
-                const prevQuantity = existingItemsMap.get(item.id).quantity;
+                const prevQuantity = existingItemsMap.get(item.id)?.quantity ?? 0;
                 const quantityDifference = item.quantity - prevQuantity;
 
                 console.log(quantityDifference)
 
                 // Update the quantity in the map
-                existingItemsMap.get(item.id).quantity = item.quantity;
+                existingItemsMap.get(item.id)!.quantity = item.quantity;
 
                 // Send the quantity difference to the API
                 addItemsToCartApi(user.user_id, item.id, quantityDifference);
@@ -88,13 +78,9 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
             });
 
             // Merge updated data
-
             //old
             // const combinedData = [...formattedItems, ...newItems];
             const combinedData = [...Array.from(existingItemsMap.values())];
-
-            //compare combine data to existingItemsMap??? even the same item but different amount
-            //post to match combinedData
 
             const fetchItemData = async () => {
               try {
@@ -173,7 +159,7 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
   }
 
   return (
-    <div className="flex mt-32 mx-12 flex-col sm:flex-row">
+    <div className="flex mt-32 mx-12 flex-col md:flex-row">
       <div className="w-2/3 p-4 overflow-auto bg-white rounded-lg max-sm:w-full p-0">
         <h2 className="text-2xl font-semibold mb-4">Shopping Cart</h2>
         {cart.length === 0 ? (
@@ -218,7 +204,7 @@ const Cart: React.FC<CartProps> = ({ user, setUser }) =>
           </div>
         )}
       </div>
-			<div className="w-full sm:w-1/4 h-[40vh] p-4 bg-slate-200 sm:ml-4 mt-4 sm:mt-0 mb-4 border flex flex-col rounded-lg">
+			<div className="w-full md:w-1/4 h-[40vh] p-4 bg-slate-200 sm:ml-4 mt-4 md:mt-0 mb-4 border flex flex-col rounded-lg">
 				<h2 className="text-2xl font-semibold mb-4">Checkout</h2>
 				<div className="flex justify-between items-center">
           <span className="text-gray-600">Items Fee:</span>

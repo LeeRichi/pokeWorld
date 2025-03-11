@@ -12,6 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import Head from 'next/head';
+import Card from '@/components/Card';
 
 const GA_TRACKING_ID = "G-XVTMR61Y98"; //safe in public
 
@@ -19,10 +20,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 {
 	const [user, setUser] = useState<User | null>(null);
 	const [cartLen, setCartLen] = useState<number>(0);
-	console.log(cartLen)
-
-	// const cart = useSelector((state: RootState) => state.cart.items);
-	// console.log(cart.length)
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
@@ -32,7 +29,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 	console.log(user)
 
 	useEffect(() => {
-    const fetchCartAmount = async () => {
+    const fetchCart = async () => {
       if (!user?.user_id) return;
       try {
         const response = await fetch(`http://localhost:8081/myapp/cart/${user.user_id}`);
@@ -42,8 +39,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
 
 				const cartData = await response.json();
 
-				const items = cartData.items as Record<string, number>;
+				localStorage.setItem("cart", JSON.stringify(cartData))
 
+				const items = cartData.items as Record<string, number>;
         const sum = Object.values(items).reduce((acc, curr) => acc + curr, 0);
 
 				console.log(sum)
@@ -55,7 +53,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps)
       }
     };
 
-    fetchCartAmount();
+    fetchCart();
   }, [user]);
 
 	const checkTokenExpiration = () => {
