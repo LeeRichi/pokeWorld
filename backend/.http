@@ -12,4 +12,8 @@
 # PUT "http://localhost:8080/myapp/cart/3/update?itemId=2&quantity=11"
 
 //worked
-DELETE http://localhost:8081/myapp/cart/3/remove?userId=3&itemId=5
+# DELETE http://localhost:8081/myapp/cart/3/remove?userId=3&itemId=5
+
+
+my-key-pair.pem
+newKey.pem

@@ -92,24 +92,24 @@ services:
     networks:
       - mynetwork
 
-  java-app:
-    build:
-      context: ./src/cart-api
-      dockerfile: Dockerfile  # Assuming you have a Dockerfile in the same directory
-    ports:
-      - "8081:8081"  # Exposing port 8081 for your Java app
-    environment:
-      - DB_HOST=db  # Database host is the db service name
-      - DB_USER=${DB_USER}  # These environment variables should be defined
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5433/pokemon_db
-      - SPRING_DATASOURCE_USERNAME=youruser
-      - SPRING_DATASOURCE_PASSWORD=yourpassword
-    depends_on:
-      - db  # Waits for the db service to be available before starting
-    networks:
-      - mynetwork
+  # java-app:
+  #   build:
+  #     context: ./src/cart-api
+  #     dockerfile: Dockerfile  # Assuming you have a Dockerfile in the same directory
+  #   ports:
+  #     - "8081:8081"  # Exposing port 8081 for your Java app
+  #   environment:
+  #     - DB_HOST=db  # Database host is the db service name
+  #     - DB_USER=${DB_USER}  # These environment variables should be defined
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - DB_NAME=${DB_NAME}
+  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5433/pokemon_db
+  #     - SPRING_DATASOURCE_USERNAME=youruser
+  #     - SPRING_DATASOURCE_PASSWORD=yourpassword
+  #   depends_on:
+  #     - db  # Waits for the db service to be available before starting
+  #   networks:
+  #     - mynetwork
 
 volumes:
   pgdata:
