@@ -26,7 +26,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ sortBy, types, onTypeChange, onSo
     const sortValue = e.target.value;
 		onSortChange(sortValue);
   };
-
   return (
     <div className="p-4 bg-white rounded-lg flex items-center space-x-4 flex-wrap justify-center">
 

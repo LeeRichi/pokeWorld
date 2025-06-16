@@ -8,8 +8,6 @@ import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/c
 const backend_url =  process.env.NEXT_PUBLIC_MY_BACKEND_API_URL || 'https://pokeworld2.duckdns.org'
 // const backend_url =  process.env.BACKEND_URL || 'http://localhost:3006'
 
-console.log(backend_url)
-
 const client = new ApolloClient({
   link: new HttpLink({
     uri: `${backend_url}/graphql`,
