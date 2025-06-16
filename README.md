@@ -3,7 +3,8 @@
 This project is a full-stack Pokémon application built with Node.js and Java in the backend, PostgreSQL database, and Docker for containerization. It includes an API to manage Pokémon data and user interactions via both REST API and GraphQL, server-side sorting of large data, and finally deployment to AWS EC2.
 
 ## Project demo
-https://pokeworld-leerichis-projects.vercel.app/
+updated at Jun 16, 2025
+https://pokeworld-leerichi-leerichis-projects.vercel.app/
 
 <img width="1413" alt="front page demo photo" src="https://github.com/user-attachments/assets/50df0eb4-5834-461d-9804-271082eba488">
 

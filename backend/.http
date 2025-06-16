@@ -15,5 +15,3 @@
 # DELETE http://localhost:8081/myapp/cart/3/remove?userId=3&itemId=5
 
 
-my-key-pair.pem
-newKey.pem
